@@ -16,7 +16,7 @@ public class Client {
     int id;
     
     public Client(int tmpId, Socket tmpSocket){
-        id = tmpId;
-        socket = tmpSocket;
+        this.id = tmpId;
+        this.socket = tmpSocket;
     }
 }

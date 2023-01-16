@@ -6,8 +6,6 @@ package pfe.nebular.server;
 
 import java.io.IOException;
 import static java.lang.System.exit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -22,6 +20,9 @@ public class Server extends javax.swing.JFrame {
         initComponents();
     }
 
+    
+    ThreadServer server;
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -43,6 +44,11 @@ public class Server extends javax.swing.JFrame {
         ServerStop = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        ServerMonit = new javax.swing.JButton();
+        MonitPanel = new javax.swing.JPanel();
+        MonitStopBtn = new javax.swing.JButton();
+        MonitLabel = new javax.swing.JLabel();
+        MsgText = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
@@ -86,7 +92,7 @@ public class Server extends javax.swing.JFrame {
             AdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(AdminPanelLayout.createSequentialGroup()
                 .addComponent(AdminLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 148, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 143, Short.MAX_VALUE)
                 .addGroup(AdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(AdminButton)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -97,7 +103,7 @@ public class Server extends javax.swing.JFrame {
                     .addComponent(AdminText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(57, 57, 57)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(95, Short.MAX_VALUE)))
+                    .addContainerGap(90, Short.MAX_VALUE)))
         );
 
         getContentPane().add(AdminPanel, "card2");
@@ -129,6 +135,14 @@ public class Server extends javax.swing.JFrame {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Enter a port to start the server :");
 
+        ServerMonit.setText("Monitoring");
+        ServerMonit.setEnabled(false);
+        ServerMonit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ServerMonitActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout ServerPanelLayout = new javax.swing.GroupLayout(ServerPanel);
         ServerPanel.setLayout(ServerPanelLayout);
         ServerPanelLayout.setHorizontalGroup(
@@ -145,12 +159,17 @@ public class Server extends javax.swing.JFrame {
                 .addGroup(ServerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(ServerPort, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(63, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ServerPanelLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(ServerMonit))
         );
         ServerPanelLayout.setVerticalGroup(
             ServerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ServerPanelLayout.createSequentialGroup()
-                .addGap(67, 67, 67)
+                .addContainerGap()
+                .addComponent(ServerMonit)
+                .addGap(75, 75, 75)
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)
                 .addComponent(ServerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -160,10 +179,50 @@ public class Server extends javax.swing.JFrame {
                 .addGroup(ServerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ServerStart)
                     .addComponent(ServerStop))
-                .addContainerGap(80, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         getContentPane().add(ServerPanel, "card3");
+
+        MonitStopBtn.setText("Stop");
+        MonitStopBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MonitStopBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout MonitPanelLayout = new javax.swing.GroupLayout(MonitPanel);
+        MonitPanel.setLayout(MonitPanelLayout);
+        MonitPanelLayout.setHorizontalGroup(
+            MonitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(MonitPanelLayout.createSequentialGroup()
+                .addGroup(MonitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(MonitPanelLayout.createSequentialGroup()
+                        .addContainerGap(322, Short.MAX_VALUE)
+                        .addComponent(MonitStopBtn))
+                    .addGroup(MonitPanelLayout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(MonitLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(MonitPanelLayout.createSequentialGroup()
+                .addGap(116, 116, 116)
+                .addComponent(MsgText, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        MonitPanelLayout.setVerticalGroup(
+            MonitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MonitPanelLayout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(MonitLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(39, 39, 39)
+                .addComponent(MsgText, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 132, Short.MAX_VALUE)
+                .addComponent(MonitStopBtn)
+                .addContainerGap())
+        );
+
+        getContentPane().add(MonitPanel, "card4");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -183,24 +242,28 @@ public class Server extends javax.swing.JFrame {
 
     private void ServerStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ServerStartActionPerformed
         launchServer(ServerPort.getText());
+        ServerMonit.setEnabled(true);
     }//GEN-LAST:event_ServerStartActionPerformed
 
     private void ServerStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ServerStopActionPerformed
 
-        ServerStart.setEnabled(true);
-        ServerStop.setEnabled(false);
-        ServerPort.setEnabled(true);
-        
-        server.running = false;
-        try {
-            server.serverSocket.close();
-        } catch (IOException ex) {
-            System.out.println("Can not close server properly.");
-        }
+        stopServer();
+        ServerMonit.setEnabled(false);
         
     }//GEN-LAST:event_ServerStopActionPerformed
-    
-    ThreadServer server;
+
+    private void MonitStopBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MonitStopBtnActionPerformed
+        stopServer();
+        MonitPanel.setVisible(false);
+        ServerPanel.setVisible(true);
+        ServerMonit.setEnabled(false);
+    }//GEN-LAST:event_MonitStopBtnActionPerformed
+
+    private void ServerMonitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ServerMonitActionPerformed
+        ServerPanel.setVisible(false);
+        MonitPanel.setVisible(true);
+        MonitLabel.setText(""+ server.totClient);
+    }//GEN-LAST:event_ServerMonitActionPerformed
     
     private void verifPassword(String input){
         if(input.equals("123")){
@@ -216,7 +279,6 @@ public class Server extends javax.swing.JFrame {
     
     private void launchServer(String input){
         
-        
         int port;
         if (input.isEmpty()){
             port = 5000;
@@ -226,7 +288,7 @@ public class Server extends javax.swing.JFrame {
         System.out.println(port);
         if(port != 0){
             if(port >= 3000){
-                server = new ThreadServer(port);
+                server = new ThreadServer(port, MsgText);
                 if(server.create){
                     server.start();
                     ServerStart.setEnabled(false);
@@ -243,6 +305,19 @@ public class Server extends javax.swing.JFrame {
             System.out.println("Port is not valid !");
         }
                 
+    }
+    
+    private void stopServer(){
+        ServerStart.setEnabled(true);
+        ServerStop.setEnabled(false);
+        ServerPort.setEnabled(true);
+        
+        server.running = false;
+        try {
+            server.serverSocket.close();
+        } catch (IOException ex) {
+            System.out.println("Can not close server properly.");
+        }
     }
     
     public static Integer tryParse(String text) {
@@ -295,6 +370,11 @@ public class Server extends javax.swing.JFrame {
     private javax.swing.JLabel AdminLabel;
     private javax.swing.JPanel AdminPanel;
     private javax.swing.JTextField AdminText;
+    private javax.swing.JLabel MonitLabel;
+    private javax.swing.JPanel MonitPanel;
+    private javax.swing.JButton MonitStopBtn;
+    private javax.swing.JTextField MsgText;
+    private javax.swing.JButton ServerMonit;
     private javax.swing.JPanel ServerPanel;
     private javax.swing.JTextField ServerPort;
     private javax.swing.JButton ServerStart;
