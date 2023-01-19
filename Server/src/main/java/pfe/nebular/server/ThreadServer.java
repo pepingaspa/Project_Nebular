@@ -5,13 +5,9 @@
 package pfe.nebular.server;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JTextField;
 
 /**
  *
@@ -20,17 +16,17 @@ import javax.swing.JTextField;
 public class ThreadServer extends Thread {
 
     ServerSocket serverSocket;
+
     boolean create = false, running = false;
-    ArrayList<Client> tabClient;
     int totClient = 0;
-    JTextField MsgText;
+    ArrayList<Client> tabClient = new ArrayList<Client>();
     
-    public ThreadServer(int port, JTextField TmpMsgText){
+    public ThreadServer(int port){
         try {
             this.serverSocket = new ServerSocket(port);
+            
             System.out.println("Server launching on port : " + port);
             this.create = true;
-            this.MsgText = TmpMsgText;
         } catch (IOException ex) {
             System.out.println("Server can not launch !");
             this.create = false;
@@ -40,20 +36,29 @@ public class ThreadServer extends Thread {
     @Override
     public void run() {
         running = true;
-        System.out.println("running");
+        System.out.println("Server started !");
         while(running){
             try {
                 Socket socket = serverSocket.accept();
-                System.out.println("New Client accepted !");
+                
+                ThreadListening listening = new ThreadListening(socket);
+                ThreadWriting writing = new ThreadWriting(socket);
+                
+                listening.start();
+                writing.start();
+                
+                ConvPanel convPanel = new ConvPanel(writing);
+                
+                Server.getServer().add(convPanel).setVisible(true);
+                
+                
                 totClient++;
-                Client client = new Client(totClient, socket);
-                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-                try {
-                    Message msg = (Message) in.readObject();
-                    System.out.println(msg.exp +" -> " + msg.dest + "|" + msg.date + "|" + msg.content);
-                } catch (ClassNotFoundException ex) {
-                    System.out.println("raté");
-                }
+                
+                Client client = new Client(totClient, listening, writing, socket.getRemoteSocketAddress(), convPanel);
+                
+                tabClient.add(client);
+                
+                System.out.println("New Client accepted !");                
                 
             } catch (IOException ex) {
                 System.out.println("Server failed to accept client !");
@@ -61,6 +66,5 @@ public class ThreadServer extends Thread {
         }
         System.out.println("Exit while loop.");
     }
-    
 
 }

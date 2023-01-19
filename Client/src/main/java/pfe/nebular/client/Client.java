@@ -6,7 +6,6 @@ package pfe.nebular.client;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,6 +41,7 @@ public class Client extends javax.swing.JFrame {
         ArpPortText = new javax.swing.JTextField();
         ArpButton = new javax.swing.JButton();
         MsgPanel = new javax.swing.JPanel();
+        MsgLabel = new javax.swing.JLabel();
         MsgText = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -98,27 +98,28 @@ public class Client extends javax.swing.JFrame {
 
         getContentPane().add(ArpPanel, "card2");
 
-        MsgText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MsgTextActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout MsgPanelLayout = new javax.swing.GroupLayout(MsgPanel);
         MsgPanel.setLayout(MsgPanelLayout);
         MsgPanelLayout.setHorizontalGroup(
             MsgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(MsgPanelLayout.createSequentialGroup()
-                .addGap(190, 190, 190)
-                .addComponent(MsgText, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(221, Short.MAX_VALUE))
+                .addContainerGap(104, Short.MAX_VALUE)
+                .addGroup(MsgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MsgPanelLayout.createSequentialGroup()
+                        .addComponent(MsgLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(188, 188, 188))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MsgPanelLayout.createSequentialGroup()
+                        .addComponent(MsgText, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(77, 77, 77))))
         );
         MsgPanelLayout.setVerticalGroup(
             MsgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(MsgPanelLayout.createSequentialGroup()
-                .addGap(87, 87, 87)
-                .addComponent(MsgText, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(254, Short.MAX_VALUE))
+                .addGap(66, 66, 66)
+                .addComponent(MsgLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(69, 69, 69)
+                .addComponent(MsgText, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(135, Short.MAX_VALUE))
         );
 
         getContentPane().add(MsgPanel, "card3");
@@ -132,22 +133,8 @@ public class Client extends javax.swing.JFrame {
         connectToServer(ip, port);
     }//GEN-LAST:event_ArpButtonActionPerformed
 
-    private void MsgTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MsgTextActionPerformed
-        Message msg = new Message(MsgText.getText(), "A", "B");
-        ObjectOutputStream out;
-        try {
-            out = new ObjectOutputStream(socket.getOutputStream());
-            out.writeObject(msg);
-            out.flush();
-            
-        } catch (IOException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
-        
-    }//GEN-LAST:event_MsgTextActionPerformed
-
+    
+    
     public void connectToServer(String tmpIp, String tmpPort){
         
         int port;
@@ -162,6 +149,10 @@ public class Client extends javax.swing.JFrame {
             System.out.println("Connextion achieve");
             ArpPanel.setVisible(false);
             MsgPanel.setVisible(true);
+            
+            ThreadListening listening = new ThreadListening(socket, MsgText, MsgLabel);
+            listening.start();
+            
         } catch (IOException ex) {
             System.out.println("Can not connet to the server !");
         }
@@ -219,6 +210,7 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JPanel ArpPanel;
     private javax.swing.JLabel ArpPortLabel;
     private javax.swing.JTextField ArpPortText;
+    private javax.swing.JLabel MsgLabel;
     private javax.swing.JPanel MsgPanel;
     private javax.swing.JTextField MsgText;
     // End of variables declaration//GEN-END:variables

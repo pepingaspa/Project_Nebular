@@ -4,7 +4,7 @@
  */
 package pfe.nebular.server;
 
-import java.net.Socket;
+import java.net.SocketAddress;
 
 /**
  *
@@ -12,11 +12,20 @@ import java.net.Socket;
  */
 public class Client {
     
-    Socket socket;
-    int id;
+    ThreadListening listening;
+    ThreadWriting writing;
+    int idClient;
+    SocketAddress ipClient;
+    ConvPanel convPanel;
+
     
-    public Client(int tmpId, Socket tmpSocket){
-        this.id = tmpId;
-        this.socket = tmpSocket;
+    public Client(int tmpId, ThreadListening tmpListening, ThreadWriting tmpWriting, SocketAddress tmpIp, ConvPanel tmpConvPanel){
+        this.idClient = tmpId;
+        this.listening = tmpListening;
+        this.writing = tmpWriting;
+        this.ipClient = tmpIp;
+        this.convPanel = tmpConvPanel;
     }
+    
+    
 }
