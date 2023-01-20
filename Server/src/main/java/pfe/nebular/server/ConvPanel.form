@@ -57,6 +57,9 @@
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="Affichage">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="Affichage" noResource="true"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="Titre">
       <Properties>

@@ -16,9 +16,7 @@ import java.util.logging.Logger;
  */
 public class Client extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Client
-     */
+    DataOutputStream out;
     public Client() {
         initComponents();
     }
@@ -98,6 +96,12 @@ public class Client extends javax.swing.JFrame {
 
         getContentPane().add(ArpPanel, "card2");
 
+        MsgText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MsgTextActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout MsgPanelLayout = new javax.swing.GroupLayout(MsgPanel);
         MsgPanel.setLayout(MsgPanelLayout);
         MsgPanelLayout.setHorizontalGroup(
@@ -133,6 +137,16 @@ public class Client extends javax.swing.JFrame {
         connectToServer(ip, port);
     }//GEN-LAST:event_ArpButtonActionPerformed
 
+    private void MsgTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MsgTextActionPerformed
+        try {
+            out.writeUTF(MsgText.getText());
+            out.flush();
+        } catch (IOException ex) {
+            System.out.println("writing failed");
+        }
+        
+    }//GEN-LAST:event_MsgTextActionPerformed
+
     
     
     public void connectToServer(String tmpIp, String tmpPort){
@@ -149,7 +163,7 @@ public class Client extends javax.swing.JFrame {
             System.out.println("Connextion achieve");
             ArpPanel.setVisible(false);
             MsgPanel.setVisible(true);
-            
+            out = new DataOutputStream(socket.getOutputStream());
             ThreadListening listening = new ThreadListening(socket, MsgText, MsgLabel);
             listening.start();
             

@@ -25,6 +25,8 @@ public class ConvPanel extends javax.swing.JPanel {
             }
         });
 
+        Affichage.setName("Affichage"); // NOI18N
+
         Titre.setText("ConvPanel");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

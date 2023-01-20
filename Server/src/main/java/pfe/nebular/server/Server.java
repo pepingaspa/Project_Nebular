@@ -21,6 +21,8 @@ public class Server extends javax.swing.JFrame {
         return server;
     }
     
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -572,8 +574,6 @@ public class Server extends javax.swing.JFrame {
         hidePanel("DataPanel");
     }//GEN-LAST:event_TBData2ActionPerformed
     
-    
-    
     private void hidePanel(String panelName){
         for(int i=0; i<tabPanel.length; i++){
             if(tabPanel[i].getName().equals(panelName)){
@@ -599,7 +599,6 @@ public class Server extends javax.swing.JFrame {
     }
     
     private void launchServer(String input){
-        
         int port;
         if (input.isEmpty()){
             port = 5000;
@@ -623,8 +622,7 @@ public class Server extends javax.swing.JFrame {
             
         }else{
             System.out.println("Port is not valid !");
-        }
-                
+        }    
     }
     
     private void stopServer(){
@@ -649,7 +647,6 @@ public class Server extends javax.swing.JFrame {
     }
     
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -670,7 +667,6 @@ public class Server extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Server.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         
