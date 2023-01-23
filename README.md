@@ -1,7 +1,7 @@
 # NEBULAR
 
 
-Nebular is a project lead by a group of students in cybersecurity à CYTech Cergy Paris.
+Nebular is a project lead by a group of students in cybersecurity in CYTech Cergy Paris.
 
 ## AUTHORS
 
@@ -30,13 +30,13 @@ Once the socket connection is done, server and client needs to authenticate to e
 
 * Step 2 :
 
-    Server generates a strong symetric key and encrypt it with the temporary key. It sends the final key to the client wich decodes it with the temporary key.
+    Server generates a strong symetric key and encrypt it with the temporary key. It sends the final key to the client which decodes it with the temporary key.
 
     All communications are now crypted using the symetric definitive key.
 
 * Step 3 :
 
-    Server sends its certificat to the client to authenticate and client checks it.
+    Server sends its certificate to the client to authenticate and client checks it.
 
 * Step 4 :
 
@@ -44,4 +44,4 @@ Once the socket connection is done, server and client needs to authenticate to e
 
 * Step 5 :
 
-    Server and client are now authentify. The user can log in.
+    Server and client are now authentified. The user can log in.
