@@ -2,26 +2,33 @@ package pfe.nebular.server;
 
 import java.io.IOException;
 import static java.lang.System.exit;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
 
 public class Server extends javax.swing.JFrame {
     
     private static Server server = null;
     private ThreadServer ThreadServer;
     private JPanel[] tabPanel;
+    private User[] tabUser;
     
     private Server() {
         initComponents();
-        this.tabPanel = new JPanel[]{AdminPanel, ServerPanel, CommPanel, DataPanel, MonitPanel};
+        this.tabPanel = new JPanel[]{
+            AdminPanel, ServerPanel, CommPanel, DataPanel, MonitPanel
+        };
+        User userA = new User(1, "test", "test", "test", "test");
+        User userB = new User(2, "truc", "truc", "truc", "truc");
+        User userC = new User(3, "toto", "toto", "toto","toto");
+        this.tabUser = new User[]{
+            userA, userB, userC            
+        };
     }
     
     public static Server getServer(){
         return server;
     }
-    
-    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -64,8 +71,12 @@ public class Server extends javax.swing.JFrame {
         TBMonit3 = new javax.swing.JButton();
         TBComm3 = new javax.swing.JButton();
         TBData3 = new javax.swing.JButton();
+        MonitTotClient = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(600, 600));
+        setResizable(false);
+        setSize(new java.awt.Dimension(600, 600));
         getContentPane().setLayout(new java.awt.CardLayout());
 
         AdminPanel.setName("AdminPanel"); // NOI18N
@@ -99,7 +110,7 @@ public class Server extends javax.swing.JFrame {
                     .addGroup(AdminPanelLayout.createSequentialGroup()
                         .addGap(102, 102, 102)
                         .addComponent(AdminText, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 275, Short.MAX_VALUE))
+                .addGap(0, 335, Short.MAX_VALUE))
         );
         AdminPanelLayout.setVerticalGroup(
             AdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,7 +118,7 @@ public class Server extends javax.swing.JFrame {
                 .addComponent(AdminLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(88, 88, 88)
                 .addComponent(AdminText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 288, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 255, Short.MAX_VALUE)
                 .addComponent(AdminButton)
                 .addGap(98, 98, 98))
         );
@@ -184,7 +195,7 @@ public class Server extends javax.swing.JFrame {
                 .addComponent(TBComm)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TBData)
-                .addGap(0, 262, Short.MAX_VALUE))
+                .addGap(0, 322, Short.MAX_VALUE))
         );
         ToolBarLayout.setVerticalGroup(
             ToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -230,7 +241,7 @@ public class Server extends javax.swing.JFrame {
                 .addGroup(ServerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ServerStart)
                     .addComponent(ServerStop))
-                .addContainerGap(264, Short.MAX_VALUE))
+                .addContainerGap(231, Short.MAX_VALUE))
         );
 
         getContentPane().add(ServerPanel, "card3");
@@ -241,18 +252,7 @@ public class Server extends javax.swing.JFrame {
 
         SidePanel.setBackground(new java.awt.Color(153, 153, 153));
         SidePanel.setPreferredSize(new java.awt.Dimension(150, 500));
-
-        javax.swing.GroupLayout SidePanelLayout = new javax.swing.GroupLayout(SidePanel);
-        SidePanel.setLayout(SidePanelLayout);
-        SidePanelLayout.setHorizontalGroup(
-            SidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 150, Short.MAX_VALUE)
-        );
-        SidePanelLayout.setVerticalGroup(
-            SidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 533, Short.MAX_VALUE)
-        );
-
+        SidePanel.setLayout(new java.awt.GridLayout(10, 1));
         CommPanel.add(SidePanel, java.awt.BorderLayout.LINE_START);
 
         ToolBar1.setBackground(new java.awt.Color(255, 255, 255));
@@ -297,7 +297,7 @@ public class Server extends javax.swing.JFrame {
                 .addComponent(TBComm1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TBData1)
-                .addGap(0, 262, Short.MAX_VALUE))
+                .addGap(0, 91, Short.MAX_VALUE))
         );
         ToolBar1Layout.setVerticalGroup(
             ToolBar1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -312,17 +312,8 @@ public class Server extends javax.swing.JFrame {
 
         CommPanel.add(ToolBar1, java.awt.BorderLayout.PAGE_START);
 
-        javax.swing.GroupLayout CenterPanelLayout = new javax.swing.GroupLayout(CenterPanel);
-        CenterPanel.setLayout(CenterPanelLayout);
-        CenterPanelLayout.setHorizontalGroup(
-            CenterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 531, Short.MAX_VALUE)
-        );
-        CenterPanelLayout.setVerticalGroup(
-            CenterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 533, Short.MAX_VALUE)
-        );
-
+        CenterPanel.setBackground(new java.awt.Color(255, 255, 255));
+        CenterPanel.setLayout(new java.awt.CardLayout());
         CommPanel.add(CenterPanel, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(CommPanel, "card4");
@@ -372,7 +363,7 @@ public class Server extends javax.swing.JFrame {
                 .addComponent(TBComm2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TBData2)
-                .addGap(0, 262, Short.MAX_VALUE))
+                .addGap(0, 322, Short.MAX_VALUE))
         );
         ToolBar2Layout.setVerticalGroup(
             ToolBar2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -401,7 +392,7 @@ public class Server extends javax.swing.JFrame {
                 .addComponent(ToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(63, 63, 63)
                 .addComponent(DataTitre)
-                .addContainerGap(451, Short.MAX_VALUE))
+                .addContainerGap(418, Short.MAX_VALUE))
         );
 
         getContentPane().add(DataPanel, "card5");
@@ -450,7 +441,7 @@ public class Server extends javax.swing.JFrame {
                 .addComponent(TBComm3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TBData3)
-                .addGap(0, 262, Short.MAX_VALUE))
+                .addGap(0, 322, Short.MAX_VALUE))
         );
         ToolBar3Layout.setVerticalGroup(
             ToolBar3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -463,17 +454,22 @@ public class Server extends javax.swing.JFrame {
                     .addComponent(TBData3)))
         );
 
+        MonitTotClient.setText("0");
+
         javax.swing.GroupLayout MonitPanelLayout = new javax.swing.GroupLayout(MonitPanel);
         MonitPanel.setLayout(MonitPanelLayout);
         MonitPanelLayout.setHorizontalGroup(
             MonitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(ToolBar3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(MonitPanelLayout.createSequentialGroup()
-                .addGap(282, 282, 282)
-                .addComponent(MonitTitre)
+                .addGroup(MonitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(MonitPanelLayout.createSequentialGroup()
+                        .addGap(282, 282, 282)
+                        .addComponent(MonitTitre))
+                    .addGroup(MonitPanelLayout.createSequentialGroup()
+                        .addGap(318, 318, 318)
+                        .addComponent(MonitTotClient)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(MonitPanelLayout.createSequentialGroup()
-                .addComponent(ToolBar3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
         );
         MonitPanelLayout.setVerticalGroup(
             MonitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -481,7 +477,9 @@ public class Server extends javax.swing.JFrame {
                 .addComponent(ToolBar3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
                 .addComponent(MonitTitre)
-                .addContainerGap(501, Short.MAX_VALUE))
+                .addGap(170, 170, 170)
+                .addComponent(MonitTotClient)
+                .addContainerGap(279, Short.MAX_VALUE))
         );
 
         getContentPane().add(MonitPanel, "card6");
@@ -590,12 +588,31 @@ public class Server extends javax.swing.JFrame {
         int key = "123".hashCode();
         if(tmpI == key){
             hidePanel("ServerPanel");
+            initCommPanel();
         }
         else{
             String msg = "Wrong Password !";
             JOptionPane.showMessageDialog(this, msg,"ERROR", JOptionPane.ERROR_MESSAGE);
             exit(1);
         }
+    }
+    
+    private void initCommPanel(){
+        //init tabUser
+        
+        //Affichage btn
+        
+        for(int i =0; i<tabUser.length; i++){
+            JButton btn = new JButton(tabUser[i].nom);
+            btn.setSize(50,50);
+            SidePanel.add(btn).setVisible(true);
+            CommPanel.updateUI();
+        }
+        
+        ConvPanel convPanel = new ConvPanel();
+        CommPanel.add(convPanel).setVisible(true);
+        CommPanel.updateUI();
+        
     }
     
     private void launchServer(String input){
@@ -686,18 +703,19 @@ public class Server extends javax.swing.JFrame {
     private javax.swing.JPanel AdminPanel;
     private javax.swing.JPasswordField AdminText;
     public javax.swing.JPanel CenterPanel;
-    private javax.swing.JPanel CommPanel;
+    public javax.swing.JPanel CommPanel;
     private javax.swing.JPanel DataPanel;
     private javax.swing.JLabel DataTitre;
-    private javax.swing.JPanel MonitPanel;
+    public javax.swing.JPanel MonitPanel;
     private javax.swing.JLabel MonitTitre;
+    public javax.swing.JLabel MonitTotClient;
     private javax.swing.JLabel ServerDefault;
     private javax.swing.JPanel ServerPanel;
     private javax.swing.JTextField ServerPort;
     private javax.swing.JButton ServerStart;
     private javax.swing.JButton ServerStop;
     private javax.swing.JLabel ServerTitre;
-    private javax.swing.JPanel SidePanel;
+    public javax.swing.JPanel SidePanel;
     private javax.swing.JButton TBComm;
     private javax.swing.JButton TBComm1;
     private javax.swing.JButton TBComm2;

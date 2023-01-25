@@ -43,6 +43,8 @@ public class Client extends javax.swing.JFrame {
         MsgText = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(600, 600));
+        setSize(new java.awt.Dimension(600, 600));
         getContentPane().setLayout(new java.awt.CardLayout());
 
         ArpIpLabel.setText("Enter Server Ip :");
@@ -75,8 +77,8 @@ public class Client extends javax.swing.JFrame {
                                 .addGap(17, 17, 17))))
                     .addGroup(ArpPanelLayout.createSequentialGroup()
                         .addGap(338, 338, 338)
-                        .addComponent(ArpIpText)))
-                .addContainerGap(147, Short.MAX_VALUE))
+                        .addComponent(ArpIpText, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)))
+                .addContainerGap(168, Short.MAX_VALUE))
         );
         ArpPanelLayout.setVerticalGroup(
             ArpPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -91,7 +93,7 @@ public class Client extends javax.swing.JFrame {
                 .addComponent(ArpPortText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(ArpButton)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(191, Short.MAX_VALUE))
         );
 
         getContentPane().add(ArpPanel, "card2");
@@ -107,7 +109,7 @@ public class Client extends javax.swing.JFrame {
         MsgPanelLayout.setHorizontalGroup(
             MsgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(MsgPanelLayout.createSequentialGroup()
-                .addContainerGap(104, Short.MAX_VALUE)
+                .addContainerGap(148, Short.MAX_VALUE)
                 .addGroup(MsgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MsgPanelLayout.createSequentialGroup()
                         .addComponent(MsgLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -123,7 +125,7 @@ public class Client extends javax.swing.JFrame {
                 .addComponent(MsgLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(69, 69, 69)
                 .addComponent(MsgText, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(135, Short.MAX_VALUE))
+                .addContainerGap(297, Short.MAX_VALUE))
         );
 
         getContentPane().add(MsgPanel, "card3");

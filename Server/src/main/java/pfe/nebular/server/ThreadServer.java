@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package pfe.nebular.server;
 
 import java.io.IOException;
@@ -9,14 +5,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-/**
- *
- * @author user
- */
 public class ThreadServer extends Thread {
 
     ServerSocket serverSocket;
-
     boolean create = false, running = false;
     int totClient = 0;
     ArrayList<Client> tabClient = new ArrayList<Client>();
@@ -41,20 +32,20 @@ public class ThreadServer extends Thread {
             try {
                 Socket socket = serverSocket.accept();
                 
-                ThreadListening listening = new ThreadListening(socket);
-                ThreadWriting writing = new ThreadWriting(socket);
+                //TODO Authentification
                 
-                listening.start();
-                writing.start();
-                
-                ConvPanel convPanel = new ConvPanel(writing);
-                
-                Server.getServer().add(convPanel).setVisible(true);
-                
-                
+                //ThreadClient
                 totClient++;
                 
-                Client client = new Client(totClient, listening, writing, socket.getRemoteSocketAddress(), convPanel);
+                ThreadClient threadClient = new ThreadClient(socket, totClient+"");
+                threadClient.start();
+                
+                //Monitoring
+                
+                
+                Server.getServer().MonitTotClient.setText(totClient+"");               
+                
+                Client client = new Client(totClient, socket.getRemoteSocketAddress());
                 
                 tabClient.add(client);
                 
