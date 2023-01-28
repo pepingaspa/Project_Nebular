@@ -10,11 +10,25 @@ public class ThreadServer extends Thread {
     ServerSocket serverSocket;
     boolean create = false, running = false;
     int totClient = 0;
-    ArrayList<Client> tabClient = new ArrayList<Client>();
+    
+    static ArrayList<Entity> tabEntity = new ArrayList<Entity>();
+    
+    
+    Conversation conv1 = new Conversation(1);
+    Conversation conv2 = new Conversation(2);
+    Conversation conv3 = new Conversation(3);
+    static ArrayList<Conversation> tabConv = new ArrayList<Conversation>();
     
     public ThreadServer(int port){
         try {
             this.serverSocket = new ServerSocket(port);
+            
+            tabConv.add(conv1);
+            tabConv.add(conv2);
+            tabConv.add(conv3);
+            
+            conv1.addUser(1);
+            conv1.addUser(2);
             
             System.out.println("Server launching on port : " + port);
             this.create = true;
@@ -34,20 +48,23 @@ public class ThreadServer extends Thread {
                 
                 //TODO Authentification
                 
+                //TODO Envoi historique discussion
+                
                 //ThreadClient
                 totClient++;
                 
                 ThreadClient threadClient = new ThreadClient(socket, totClient+"");
                 threadClient.start();
                 
+                User user = new User(totClient);
+                
+                Entity ent = new Entity(threadClient, user);
+                
                 //Monitoring
+
+                Server.getServer().MonitTotClient.setText(totClient+"");
                 
-                
-                Server.getServer().MonitTotClient.setText(totClient+"");               
-                
-                Client client = new Client(totClient, socket.getRemoteSocketAddress());
-                
-                tabClient.add(client);
+                tabEntity.add(ent);
                 
                 System.out.println("New Client accepted !");                
                 
@@ -57,5 +74,18 @@ public class ThreadServer extends Thread {
         }
         System.out.println("Exit while loop.");
     }
-
+    
+    
+    static ArrayList<Entity> getTabEntity(){
+        return tabEntity;
+    }
+        
+    static Conversation getConv(int id){
+        for(Conversation conv : tabConv){
+            if(conv.idConv == id){
+                return conv;
+            }
+        }
+        return null;
+    }
 }
