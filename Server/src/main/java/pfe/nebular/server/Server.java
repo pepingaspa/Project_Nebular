@@ -2,17 +2,18 @@ package pfe.nebular.server;
 
 import java.io.IOException;
 import static java.lang.System.exit;
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class Server extends javax.swing.JFrame {
-    
+
     private static Server server = null;
     private ThreadServer ThreadServer;
     private JPanel[] tabPanel;
     private User[] tabUser;
     
+    
+
     private Server() {
         initComponents();
         this.tabPanel = new JPanel[]{
@@ -20,16 +21,18 @@ public class Server extends javax.swing.JFrame {
         };
         User userA = new User(1, "test", "test", "test", "test");
         User userB = new User(2, "truc", "truc", "truc", "truc");
-        User userC = new User(3, "toto", "toto", "toto","toto");
+        User userC = new User(3, "toto", "toto", "toto", "toto");
         this.tabUser = new User[]{
-            userA, userB, userC            
+            userA, userB, userC
         };
+        
+        
     }
-    
-    public static Server getServer(){
+
+    public static Server getServer() {
         return server;
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -74,9 +77,10 @@ public class Server extends javax.swing.JFrame {
         MonitTotClient = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(600, 600));
+        setMinimumSize(new java.awt.Dimension(500, 500));
+        setPreferredSize(new java.awt.Dimension(700, 700));
         setResizable(false);
-        setSize(new java.awt.Dimension(600, 600));
+        setSize(new java.awt.Dimension(700, 700));
         getContentPane().setLayout(new java.awt.CardLayout());
 
         AdminPanel.setName("AdminPanel"); // NOI18N
@@ -110,7 +114,7 @@ public class Server extends javax.swing.JFrame {
                     .addGroup(AdminPanelLayout.createSequentialGroup()
                         .addGap(102, 102, 102)
                         .addComponent(AdminText, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 335, Short.MAX_VALUE))
+                .addGap(0, 279, Short.MAX_VALUE))
         );
         AdminPanelLayout.setVerticalGroup(
             AdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -118,7 +122,7 @@ public class Server extends javax.swing.JFrame {
                 .addComponent(AdminLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(88, 88, 88)
                 .addComponent(AdminText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 255, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 231, Short.MAX_VALUE)
                 .addComponent(AdminButton)
                 .addGap(98, 98, 98))
         );
@@ -195,7 +199,7 @@ public class Server extends javax.swing.JFrame {
                 .addComponent(TBComm)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TBData)
-                .addGap(0, 322, Short.MAX_VALUE))
+                .addGap(0, 266, Short.MAX_VALUE))
         );
         ToolBarLayout.setVerticalGroup(
             ToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -241,7 +245,7 @@ public class Server extends javax.swing.JFrame {
                 .addGroup(ServerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ServerStart)
                     .addComponent(ServerStop))
-                .addContainerGap(231, Short.MAX_VALUE))
+                .addContainerGap(207, Short.MAX_VALUE))
         );
 
         getContentPane().add(ServerPanel, "card3");
@@ -297,7 +301,7 @@ public class Server extends javax.swing.JFrame {
                 .addComponent(TBComm1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TBData1)
-                .addGap(0, 91, Short.MAX_VALUE))
+                .addGap(0, 266, Short.MAX_VALUE))
         );
         ToolBar1Layout.setVerticalGroup(
             ToolBar1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -313,6 +317,7 @@ public class Server extends javax.swing.JFrame {
         CommPanel.add(ToolBar1, java.awt.BorderLayout.PAGE_START);
 
         CenterPanel.setBackground(new java.awt.Color(255, 255, 255));
+        CenterPanel.setPreferredSize(new java.awt.Dimension(500, 500));
         CenterPanel.setLayout(new java.awt.CardLayout());
         CommPanel.add(CenterPanel, java.awt.BorderLayout.CENTER);
 
@@ -363,7 +368,7 @@ public class Server extends javax.swing.JFrame {
                 .addComponent(TBComm2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TBData2)
-                .addGap(0, 322, Short.MAX_VALUE))
+                .addGap(0, 266, Short.MAX_VALUE))
         );
         ToolBar2Layout.setVerticalGroup(
             ToolBar2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -392,7 +397,7 @@ public class Server extends javax.swing.JFrame {
                 .addComponent(ToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(63, 63, 63)
                 .addComponent(DataTitre)
-                .addContainerGap(418, Short.MAX_VALUE))
+                .addContainerGap(394, Short.MAX_VALUE))
         );
 
         getContentPane().add(DataPanel, "card5");
@@ -441,7 +446,7 @@ public class Server extends javax.swing.JFrame {
                 .addComponent(TBComm3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TBData3)
-                .addGap(0, 322, Short.MAX_VALUE))
+                .addGap(0, 266, Short.MAX_VALUE))
         );
         ToolBar3Layout.setVerticalGroup(
             ToolBar3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -479,7 +484,7 @@ public class Server extends javax.swing.JFrame {
                 .addComponent(MonitTitre)
                 .addGap(170, 170, 170)
                 .addComponent(MonitTotClient)
-                .addContainerGap(279, Short.MAX_VALUE))
+                .addContainerGap(255, Short.MAX_VALUE))
         );
 
         getContentPane().add(MonitPanel, "card6");
@@ -488,6 +493,7 @@ public class Server extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     
+    //<editor-fold defaultstate="collapsed" desc=" Interaction graphique ">
     private void AdminButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AdminButtonActionPerformed
         verifPassword(AdminText.getPassword());
     }//GEN-LAST:event_AdminButtonActionPerformed
@@ -571,82 +577,104 @@ public class Server extends javax.swing.JFrame {
     private void TBData2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TBData2ActionPerformed
         hidePanel("DataPanel");
     }//GEN-LAST:event_TBData2ActionPerformed
+    // </editor-fold>
     
-    private void hidePanel(String panelName){
-        for(int i=0; i<tabPanel.length; i++){
-            if(tabPanel[i].getName().equals(panelName)){
+    
+    private void hidePanel(String panelName) {
+        for (int i = 0; i < tabPanel.length; i++) {
+            if (tabPanel[i].getName().equals(panelName)) {
                 tabPanel[i].setVisible(true);
-            }else{
+            } else {
                 tabPanel[i].setVisible(false);
             }
         }
     }
-    
-    private void verifPassword(char[] input){
+
+    private void verifPassword(char[] input) {
         String tmp = new String(input);
         int tmpI = tmp.hashCode();
         int key = "123".hashCode();
-        if(tmpI == key){
+        if (tmpI == key) {
             hidePanel("ServerPanel");
             initCommPanel();
-        }
-        else{
+        } else {
             String msg = "Wrong Password !";
-            JOptionPane.showMessageDialog(this, msg,"ERROR", JOptionPane.ERROR_MESSAGE);
-            exit(1);
+            JOptionPane.showMessageDialog(this, msg, "ERROR", JOptionPane.ERROR_MESSAGE);
+            exit(0);
         }
     }
-    
-    private void initCommPanel(){
+
+    private void initCommPanel() {
         //init tabUser
+
+        //this.tabEntity = new ArrayList<Entity>();
         
         //Affichage btn
-        
-        for(int i =0; i<tabUser.length; i++){
-            JButton btn = new JButton(tabUser[i].nom);
-            btn.setSize(50,50);
-            SidePanel.add(btn).setVisible(true);
-            CommPanel.updateUI();
-        }
-        
-        ConvPanel convPanel = new ConvPanel();
-        CommPanel.add(convPanel).setVisible(true);
-        CommPanel.updateUI();
-        
+//        for (int i = 0; i < tabUser.length; i++) {
+//            
+//            JButton btn = new JButton(tabUser[i].nom + " " + tabUser[i].prenom);
+//            btn.setName("Btn"+tabUser[i].id);
+//            btn.setSize(50, 50);
+//            btn.addActionListener(new ActionListener() {
+//                public void actionPerformed(ActionEvent e) {
+//                    for(Entity ent : tabEntity){
+//                        if(ent.button.getName().equals(btn.getName())){
+//                            ent.convPanel.setVisible(true);
+//                        }else{
+//                            ent.convPanel.setVisible(false);
+//                        }
+//                    }
+//                }
+//            });
+//            
+//            SidePanel.add(btn).setVisible(true);
+//            CommPanel.updateUI();
+//            
+//            ConvPanel convPanel = new ConvPanel();
+//            convPanel.setName("Panel"+tabUser[i].id);
+//            convPanel.ConvTitre.setText(tabUser[i].prenom + " " + tabUser[i].nom);
+//            CenterPanel.add(convPanel).setVisible(false);
+//            CommPanel.updateUI();
+//            
+//            Entity ent = new Entity(tabUser[i], btn, convPanel);
+//            tabEntity.add(ent);
+//            
+//        }
+
     }
-    
-    private void launchServer(String input){
+
+    private void launchServer(String input) {
         int port;
-        if (input.isEmpty()){
+        if (input.isEmpty()) {
             port = 5000;
-        }else{
+        } else {
             port = tryParse(input);
         }
-        if(port != 0){
-            if(port >= 3000){
+        if (port != 0) {
+            if (port >= 3000) {
                 ThreadServer = new ThreadServer(port);
-                if(ThreadServer.create){
+                if (ThreadServer.create) {
                     ThreadServer.start();
                     ServerStart.setEnabled(false);
                     ServerStop.setEnabled(true);
                     ServerPort.setEnabled(false);
-                }else{
+                } else {
                     System.out.println("Server can not be created.");
                 }
-            }else{
+            } else {
                 System.out.println("Port must be 3000 or more !");
             }
-            
-        }else{
+
+        } else {
             System.out.println("Port is not valid !");
-        }    
+        }
     }
-    
-    private void stopServer(){
+
+    private void stopServer() {
         ServerStart.setEnabled(true);
         ServerStop.setEnabled(false);
         ServerPort.setEnabled(true);
-        
+
         ThreadServer.running = false;
         try {
             ThreadServer.serverSocket.close();
@@ -654,7 +682,7 @@ public class Server extends javax.swing.JFrame {
             System.out.println("Can not close server properly.");
         }
     }
-    
+
     private static Integer tryParse(String text) {
         try {
             return Integer.parseInt(text);
@@ -662,7 +690,7 @@ public class Server extends javax.swing.JFrame {
             return 0;
         }
     }
-    
+
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -686,7 +714,6 @@ public class Server extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override

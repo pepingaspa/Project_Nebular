@@ -14,5 +14,7 @@ public class User {
         this.pseudo = tmpPseudo;
     }
 
-    
+    public User(int tmpId){
+        this.id = tmpId;
+    }
 }

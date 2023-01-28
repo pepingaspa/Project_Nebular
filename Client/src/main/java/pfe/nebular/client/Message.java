@@ -1,30 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package pfe.nebular.client;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-/**
- *
- * @author user
- */
 public class Message {
     
-    String content, exp, date;
+    String content, date;
     boolean visible;
-    int idConv;
+    int idConv, exp;
     
-    
-    public Message(String tmpContent){
+    public Message(String tmpContent, int tmpId){
         LocalDateTime myDateObj = LocalDateTime.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         this.date = myDateObj.format(myFormatObj);
         this.content = tmpContent;
-        this.exp = "A";
+        this.exp = tmpId;
         this.idConv = 1;
         this.visible = true;
     }
@@ -32,17 +22,20 @@ public class Message {
     public String Concat(){        
         return this.idConv + ";_;" + this.exp + ";_;" + this.date + ";_;" + this.content + ";_;" + this.visible;
     }
-    
-    public Message Deconcat(String msg){
+ 
+    public Message(String msg){
         
         String[] tmp = msg.split(";_;", 5);
         
         this.idConv = Integer.parseInt(tmp[0]);
-        this.exp = tmp[1];
+        this.exp = Integer.parseInt(tmp[1]);
         this.date = tmp[2];
         this.content = tmp[3];
         this.visible = Boolean.parseBoolean(tmp[4]);
-        
-        return this;
     }
+    
+    public void print(){
+        System.out.println(this.exp + " -> " + this.idConv + " | " + this.date + " | " + this.visible + " | " + this.content);
+    }
+    
 }
