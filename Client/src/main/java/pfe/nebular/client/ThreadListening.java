@@ -28,7 +28,7 @@ public class ThreadListening extends Thread {
                 line = in.readUTF();
                 Message msg = new Message(line);
                 System.out.println(line);
-                msgLabel.setText(msg.Concat());
+                msgLabel.setText(msg.exp +" : " + msg.content);
             }
         } catch (IOException ex) {
             System.out.println("failed listening");

@@ -6,8 +6,8 @@ import java.time.format.DateTimeFormatter;
 public class Message {
     
     String content, date;
-    boolean visible;
-    int idConv, exp;
+    boolean visible, notif;
+    int idConv, exp, id;
     
     public Message(String tmpContent, int tmpId){
         LocalDateTime myDateObj = LocalDateTime.now();
