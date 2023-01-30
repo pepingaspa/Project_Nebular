@@ -27,9 +27,6 @@ public class ThreadServer extends Thread {
             tabConv.add(conv2);
             tabConv.add(conv3);
             
-            conv1.addUser(1);
-            conv1.addUser(2);
-            
             System.out.println("Server launching on port : " + port);
             this.create = true;
         } catch (IOException ex) {
@@ -59,6 +56,8 @@ public class ThreadServer extends Thread {
                 User user = new User(totClient);
                 
                 Entity ent = new Entity(threadClient, user);
+                
+                conv1.addUser(user.id);
                 
                 //Monitoring
 

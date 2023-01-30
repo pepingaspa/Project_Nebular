@@ -47,7 +47,7 @@ public class ThreadClient extends Thread {
                     ArrayList<Entity> tabEntity = ThreadServer.getTabEntity();
                     for(int idDest : conv.tabUsers){
                         for(Entity ent : tabEntity){
-                            if(idDest == ent.user.id){
+                            if(idDest == ent.user.id && this != ent.threadClient){
                                 ent.threadClient.write(line);
                             }
                         }
