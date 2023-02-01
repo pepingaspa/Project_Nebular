@@ -1,25 +1,25 @@
-package pfe.nebular.client;
+package classes;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Message {
     
-    String content, date;
-    boolean visible;
-    int idConv, exp;
+    public String content, date;
+    public boolean visible;
+    public int idConv, exp;
     
-    public Message(String tmpContent, int tmpId){
+    public Message(String tmpContent, int tmpId, int tmpConv){
         LocalDateTime myDateObj = LocalDateTime.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         this.date = myDateObj.format(myFormatObj);
         this.content = tmpContent;
         this.exp = tmpId;
-        this.idConv = 1;
+        this.idConv = tmpConv;
         this.visible = true;
     }
     
-    public String Concat(){        
+    public String Concat(){
         return this.idConv + ";_;" + this.exp + ";_;" + this.date + ";_;" + this.content + ";_;" + this.visible;
     }
  
