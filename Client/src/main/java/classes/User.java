@@ -1,9 +1,9 @@
-package pfe.nebular.server;
+package classes;
 
 public class User {
     
-    int id;
-    String nom, prenom, mdp, email, pseudo, statut;
+    public int id;
+    public String nom, prenom, mdp, email, pseudo, statut;
     
 
     public User(int tmpId, String tmpNom, String tmpPrenom, String tmpEmail, String tmpPseudo) {

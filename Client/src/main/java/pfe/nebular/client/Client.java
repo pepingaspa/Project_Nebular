@@ -1,8 +1,20 @@
 package pfe.nebular.client;
 
+import classes.*;
+import classes.Conversation;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JTextArea;
 
 public class Client extends javax.swing.JFrame {
 
@@ -12,24 +24,41 @@ public class Client extends javax.swing.JFrame {
     }
 
     Socket socket;
-    int idExp;
+    int idExp, idConv = 1;
+    static ArrayList<Entity> tabEnt;
+    User loggedUser;
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         ArpPanel = new javax.swing.JPanel();
         ArpIpLabel = new javax.swing.JLabel();
         ArpIpText = new javax.swing.JTextField();
         ArpPortLabel = new javax.swing.JLabel();
         ArpPortText = new javax.swing.JTextField();
         ArpButton = new javax.swing.JButton();
-        MsgPanel = new javax.swing.JPanel();
-        MsgLabel = new javax.swing.JLabel();
-        MsgText = new javax.swing.JTextField();
         LoginPanel = new javax.swing.JPanel();
-        LoginText = new javax.swing.JTextField();
         LoginTitre = new javax.swing.JLabel();
+        LoginPseudo = new javax.swing.JTextField();
+        LoginMdp = new javax.swing.JTextField();
+        LoginBtn = new javax.swing.JButton();
+        CommPanel = new javax.swing.JPanel();
+        SidePanel = new javax.swing.JPanel();
+        CenterPanel = new javax.swing.JPanel();
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(600, 600));
@@ -39,6 +68,12 @@ public class Client extends javax.swing.JFrame {
         ArpIpLabel.setText("Enter Server Ip :");
 
         ArpPortLabel.setText("Enter Server Port");
+
+        ArpPortText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ArpPortTextActionPerformed(evt);
+            }
+        });
 
         ArpButton.setText("Reach");
         ArpButton.addActionListener(new java.awt.event.ActionListener() {
@@ -87,68 +122,71 @@ public class Client extends javax.swing.JFrame {
 
         getContentPane().add(ArpPanel, "card2");
 
-        MsgText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MsgTextActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout MsgPanelLayout = new javax.swing.GroupLayout(MsgPanel);
-        MsgPanel.setLayout(MsgPanelLayout);
-        MsgPanelLayout.setHorizontalGroup(
-            MsgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(MsgPanelLayout.createSequentialGroup()
-                .addContainerGap(148, Short.MAX_VALUE)
-                .addGroup(MsgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MsgPanelLayout.createSequentialGroup()
-                        .addComponent(MsgText, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(77, 77, 77))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MsgPanelLayout.createSequentialGroup()
-                        .addComponent(MsgLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(188, 188, 188))))
-        );
-        MsgPanelLayout.setVerticalGroup(
-            MsgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(MsgPanelLayout.createSequentialGroup()
-                .addGap(123, 123, 123)
-                .addComponent(MsgLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(69, 69, 69)
-                .addComponent(MsgText, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(240, Short.MAX_VALUE))
-        );
-
-        getContentPane().add(MsgPanel, "card3");
-
-        LoginText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                LoginTextActionPerformed(evt);
-            }
-        });
-
+        LoginTitre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         LoginTitre.setText("Expéditeur");
+
+        LoginPseudo.setToolTipText("Username - Pseudo - Mail");
+
+        LoginMdp.setToolTipText("Password");
+        LoginMdp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LoginMdpActionPerformed(evt);
+            }
+        });
+
+        LoginBtn.setText("LOG IN");
+        LoginBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LoginBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout LoginPanelLayout = new javax.swing.GroupLayout(LoginPanel);
         LoginPanel.setLayout(LoginPanelLayout);
         LoginPanelLayout.setHorizontalGroup(
             LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(LoginPanelLayout.createSequentialGroup()
-                .addGap(233, 233, 233)
-                .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(LoginTitre, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
-                    .addComponent(LoginText))
+                .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(LoginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(LoginPanelLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(LoginPseudo, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, LoginPanelLayout.createSequentialGroup()
+                            .addGap(233, 233, 233)
+                            .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(LoginMdp, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(LoginTitre, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(257, Short.MAX_VALUE))
         );
         LoginPanelLayout.setVerticalGroup(
             LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(LoginPanelLayout.createSequentialGroup()
-                .addGap(143, 143, 143)
-                .addComponent(LoginTitre, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(LoginText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(313, Short.MAX_VALUE))
+                .addGap(27, 27, 27)
+                .addComponent(LoginTitre, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(LoginPseudo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(147, 147, 147)
+                .addComponent(LoginMdp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(60, 60, 60)
+                .addComponent(LoginBtn)
+                .addContainerGap(155, Short.MAX_VALUE))
         );
 
         getContentPane().add(LoginPanel, "card4");
+
+        CommPanel.setLayout(new java.awt.BorderLayout());
+
+        SidePanel.setBackground(new java.awt.Color(204, 204, 204));
+        SidePanel.setMinimumSize(new java.awt.Dimension(150, 450));
+        SidePanel.setPreferredSize(new java.awt.Dimension(150, 450));
+        SidePanel.setLayout(new java.awt.GridLayout(10, 0));
+        CommPanel.add(SidePanel, java.awt.BorderLayout.LINE_START);
+
+        CenterPanel.setLayout(new java.awt.CardLayout());
+        CommPanel.add(CenterPanel, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(CommPanel, "card3");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -159,24 +197,106 @@ public class Client extends javax.swing.JFrame {
         connectToServer(ip, port);
     }//GEN-LAST:event_ArpButtonActionPerformed
 
-    private void MsgTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MsgTextActionPerformed
+    
+    private void LoginMdpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginMdpActionPerformed
+        login();        
+    }//GEN-LAST:event_LoginMdpActionPerformed
+
+    private void login(){
+        
+        String saisie = LoginPseudo.getText()+";;;"+LoginMdp.getText().hashCode();
+        
+        boolean verif = false;
+        List<Conversation> list;
         try {
-            Message msg = new Message(MsgText.getText(), idExp);
-            out.writeUTF(msg.Concat());
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+            out.writeUTF(saisie);
             out.flush();
+            
+            
+            DataInputStream in = new DataInputStream(socket.getInputStream());
+            Object tmp = in.readUTF();
+            int idExp = tryParse((String) tmp);
+            if(idExp > 0){
+                verif = true;
+            }
+            
+            ObjectInputStream inObj = new ObjectInputStream(socket.getInputStream());
+            list = (List<Conversation>) inObj.readObject();
+            createButton(list);
+            
         } catch (IOException ex) {
-            System.out.println("writing failed");
+            System.out.println("Write failed");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-    }//GEN-LAST:event_MsgTextActionPerformed
-
-    private void LoginTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginTextActionPerformed
-        idExp = Integer.parseInt(LoginText.getText());
-        LoginPanel.setVisible(false);
-        MsgPanel.setVisible(true);
-    }//GEN-LAST:event_LoginTextActionPerformed
-
+        if(verif){
+            
+            
+            LoginPanel.setVisible(false);
+            CommPanel.setVisible(true);
+                        
+            ThreadListening listening;
+            try {
+                listening = new ThreadListening(socket);
+                listening.start();
+            } catch (IOException ex) {
+                System.out.println("Failed lunch thread");
+            }
+        }
+    }
     
+    private void ArpPortTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ArpPortTextActionPerformed
+        String ip = ArpIpText.getText();
+        String port = ArpPortText.getText();
+        connectToServer(ip, port);
+    }//GEN-LAST:event_ArpPortTextActionPerformed
+
+    private void LoginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginBtnActionPerformed
+        login();
+    }//GEN-LAST:event_LoginBtnActionPerformed
+
+    public void createButton(List<Conversation> list){
+        tabEnt = new ArrayList<Entity>();
+        
+        for(Conversation conv : list){
+            
+            JButton btn = new JButton(conv.nom);
+            btn.setName("Btn"+conv.idConv);
+            btn.setSize(50,50);
+            btn.addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    idConv = conv.idConv;
+                    hidePanel(""+idConv);
+                    CommPanel.updateUI();
+                }
+                
+            });
+            SidePanel.add(btn).setVisible(true);
+            CommPanel.updateUI();
+            
+            ConvPanel convPanel = new ConvPanel(socket, idExp, conv.idConv);
+            convPanel.setName(""+conv.idConv);
+            convPanel.ConvTitre.setText(conv.nom);
+            CenterPanel.add(convPanel).setVisible(false);
+            CommPanel.updateUI();
+            Entity ent = new Entity(convPanel, conv);
+            tabEnt.add(ent);
+        }
+
+    }
+
+    private void hidePanel(String nom){
+        for(Entity ent : tabEnt){
+            if(ent.convPanel.getName().equals(nom)){
+                ent.convPanel.setVisible(true);
+            }else{
+                ent.convPanel.setVisible(false);
+            }
+        }
+    }
     
     public void connectToServer(String tmpIp, String tmpPort){
         
@@ -193,8 +313,6 @@ public class Client extends javax.swing.JFrame {
             ArpPanel.setVisible(false);
             LoginPanel.setVisible(true);
             out = new DataOutputStream(socket.getOutputStream());
-            ThreadListening listening = new ThreadListening(socket, MsgText, MsgLabel);
-            listening.start();
             
         } catch (IOException ex) {
             System.out.println("Can not connet to the server !");
@@ -202,6 +320,15 @@ public class Client extends javax.swing.JFrame {
         
     }
     
+    
+    public static JTextArea getArea(int tmpId){
+        for(Entity  ent : tabEnt){
+            if(ent.conv.idConv == tmpId){
+                return ent.convPanel.ConvArea;
+            }
+        }
+        return null;
+    }
     
     public static Integer tryParse(String text) {
         try {
@@ -253,11 +380,14 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JPanel ArpPanel;
     private javax.swing.JLabel ArpPortLabel;
     private javax.swing.JTextField ArpPortText;
+    private javax.swing.JPanel CenterPanel;
+    private javax.swing.JPanel CommPanel;
+    private javax.swing.JButton LoginBtn;
+    private javax.swing.JTextField LoginMdp;
     private javax.swing.JPanel LoginPanel;
-    private javax.swing.JTextField LoginText;
+    private javax.swing.JTextField LoginPseudo;
     private javax.swing.JLabel LoginTitre;
-    private javax.swing.JLabel MsgLabel;
-    private javax.swing.JPanel MsgPanel;
-    private javax.swing.JTextField MsgText;
+    private javax.swing.JPanel SidePanel;
+    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

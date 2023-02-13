@@ -1,9 +1,15 @@
 package pfe.nebular.server;
 
+import classes.User;
+import classes.Conversation;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ThreadServer extends Thread {
 
@@ -13,19 +19,14 @@ public class ThreadServer extends Thread {
     
     static ArrayList<Entity> tabEntity = new ArrayList<Entity>();
     
-    
-    Conversation conv1 = new Conversation(1);
-    Conversation conv2 = new Conversation(2);
-    Conversation conv3 = new Conversation(3);
     static ArrayList<Conversation> tabConv = new ArrayList<Conversation>();
     
     public ThreadServer(int port){
         try {
             this.serverSocket = new ServerSocket(port);
             
-            tabConv.add(conv1);
-            tabConv.add(conv2);
-            tabConv.add(conv3);
+            constructVar();
+            
             
             System.out.println("Server launching on port : " + port);
             this.create = true;
@@ -35,6 +36,26 @@ public class ThreadServer extends Thread {
         }
     }
     
+    
+    public void constructVar(){
+        
+        Conversation conv1 = new Conversation(1);
+        Conversation conv2 = new Conversation(2);
+        
+        conv1.addUser(1);
+        conv1.addUser(2);
+        conv2.addUser(1);
+        conv2.addUser(3);
+        
+        conv1.setNom("Conv A");
+        conv2.setNom("Biliblu");
+        
+        tabConv.add(conv1);
+        tabConv.add(conv2);
+        
+        
+    }
+    
     @Override
     public void run() {
         running = true;
@@ -42,13 +63,46 @@ public class ThreadServer extends Thread {
         while(running){
             try {
                 Socket socket = serverSocket.accept();
-                
+                totClient++;
                 //TODO Authentification
                 
-                //TODO Envoi historique discussion
+                
+                //reception login
+                DataInputStream in = new DataInputStream(socket.getInputStream());
+                DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+                String tmp = in.readUTF();
+                String[] split = tmp.split(";;;");
+                
+                //verification login
+                
+                //getUser BDD
+                if(split[0].equals("aze") && split[1].equals("48690")){
+                    //renvoie verif
+                    out.writeUTF(""+totClient);
+                    out.flush();
+                }else{
+                    out.writeUTF("0");
+                    out.flush();
+                }
+                
+                //System.out.println(split[0] + " " + split[1]);
+                
+                ObjectOutputStream out2 = new ObjectOutputStream(socket.getOutputStream());
+                
+                List<Conversation> list = new ArrayList<>();
+                for(Conversation conv : tabConv){
+                    for(int id : conv.tabUsers){
+                        if(id == totClient){
+                            list.add(conv);
+                        }
+                    }
+                }
+                
+                out2.writeObject(list);
+                out2.flush();
                 
                 //ThreadClient
-                totClient++;
+                
                 
                 ThreadClient threadClient = new ThreadClient(socket, totClient+"");
                 threadClient.start();
@@ -56,8 +110,6 @@ public class ThreadServer extends Thread {
                 User user = new User(totClient);
                 
                 Entity ent = new Entity(threadClient, user);
-                
-                conv1.addUser(user.id);
                 
                 //Monitoring
 
