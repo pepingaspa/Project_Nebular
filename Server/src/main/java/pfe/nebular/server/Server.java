@@ -1,6 +1,5 @@
 package pfe.nebular.server;
 
-import classes.User;
 import java.io.IOException;
 import static java.lang.System.exit;
 import javax.swing.JOptionPane;
