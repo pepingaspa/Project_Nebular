@@ -1,7 +1,5 @@
 package pfe.nebular.server;
 
-import classes.User;
-
 public class Entity {
     
     ThreadClient threadClient;

@@ -1,11 +1,8 @@
 package pfe.nebular.server;
 
-import classes.Message;
-import classes.Conversation;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import static java.lang.System.exit;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -61,7 +58,6 @@ public class ThreadClient extends Thread {
                 }
             }
             System.out.println("While loop exited");
-            break;
         }
     }
     

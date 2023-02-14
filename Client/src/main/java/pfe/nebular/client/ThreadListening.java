@@ -1,19 +1,23 @@
 package pfe.nebular.client;
 
-import classes.Message;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
-import javax.swing.JTextArea;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 public class ThreadListening extends Thread {
     
     Socket socket;
     DataInputStream in;
+    JTextField msgText;
+    JLabel msgLabel;
     
-    public ThreadListening(Socket tmpSocket) throws IOException{
+    public ThreadListening(Socket tmpSocket, JTextField tmpMsgText, JLabel tmpMsgLabel) throws IOException{
         this.socket = tmpSocket;
         this.in = new DataInputStream(socket.getInputStream());
+        this.msgText = tmpMsgText;
+        this.msgLabel = tmpMsgLabel;
     }
     
     @Override
@@ -23,14 +27,8 @@ public class ThreadListening extends Thread {
             while(!line.equals("EndOfComm")){
                 line = in.readUTF();
                 Message msg = new Message(line);
-                JTextArea convArea = Client.getArea(msg.idConv);
-                if(convArea != null){
-                    convArea.setText(convArea.getText()+"\n"+msg.Concat());
-                }else{
-                    System.out.println("Failed message reception");
-                }
-                
-                
+                System.out.println(line);
+                msgLabel.setText(msg.exp +" : " + msg.content);
             }
         } catch (IOException ex) {
             System.out.println("failed listening");
