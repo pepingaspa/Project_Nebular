@@ -3,8 +3,6 @@ package classes;
 import java.util.ArrayList;
 
 public class User {
-
-    
     
     public int id, statut;
     public String nom, prenom, mdp, email, pseudo;
@@ -25,19 +23,27 @@ public class User {
         this.logged = tmpLog;
     }
     
-    public String concat(){
-        return this.id + ";U;" + this.nom + ";U;" + this.prenom + ";U;" + this.email + ";U;" + this.pseudo + ";U;" + this.mdp + ";U;" + this.statut;
+    public User(int tmpId, String tmpNom, String tmpPrenom, String tmpEmail, String tmpPseudo, int tmpStatut, boolean tmpLog) {
+        this.id = tmpId;
+        this.nom = tmpNom;
+        this.prenom = tmpPrenom;
+        this.email = tmpEmail;
+        this.pseudo = tmpPseudo;
+        this.mdp = null;
+        this.statut = tmpStatut;
+        this.logged = tmpLog;
     }
     
-    public String concatSpe(){
-        return this.id + ";U;" + this.nom + ";U;" + this.prenom + ";U;" + this.email + ";U;" + this.pseudo + ";U;" + this.statut;
+    public String concat(){
+        return this.id + ";U;" + this.nom + ";U;" + this.prenom + ";U;" + this.email + ";U;" + this.pseudo + ";U;" + this.statut + ";U;" + this.logged;
     }
     
     public static User deconcat(String concat){
         String[] split = concat.split(";U;");
-        User user = new User(Integer.parseInt(split[0]), split[1],split[2],split[3],split[4],split[5],Integer.parseInt(split[6]), Boolean.parseBoolean(split[7]));
+        User user = new User(Integer.parseInt(split[0]), split[1],split[2],split[3],split[4],Integer.parseInt(split[5]), Boolean.parseBoolean(split[6]));
         return user;
     }
+
     
     public static ArrayList<User> getAllUser(){
         ArrayList<User> tabUser = new ArrayList<User>();
@@ -57,9 +63,9 @@ public class User {
         
         for(int i=0; i < tabUser.size(); i++){
             if(i<tabUser.size()){
-                tmp = tmp + tabUser.get(i).concatSpe() + ";T;";
+                tmp = tmp + tabUser.get(i).concat() + ";T;";
             }else{
-                tmp = tmp + tabUser.get(i).concatSpe();
+                tmp = tmp + tabUser.get(i).concat();
             }
         }
         

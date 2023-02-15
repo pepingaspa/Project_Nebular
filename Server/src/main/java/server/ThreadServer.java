@@ -14,7 +14,7 @@ public class ThreadServer extends Thread {
     boolean create = false, running = false;
     int totClient = 0;
     
-    static ArrayList<Entity> tabEntity;
+    static ArrayList<Entity> tabEntity = new ArrayList<Entity>();
     static ArrayList<Conversation> tabConv;
     static ArrayList<User> tabUser;
     
@@ -48,8 +48,6 @@ public class ThreadServer extends Thread {
                 User userLog = new User();
                 int min = 1, max = 500000, alea = 0;
                 
-                tabConv.get(0).concat();
-                
                 //Echange Clé
                 System.out.println("Echange clés");
 
@@ -58,40 +56,57 @@ public class ThreadServer extends Thread {
                 System.out.println("Authentification");
                 
 
-                //Reception saisie
-                System.out.println("Saisie reception");
-                
+                //SAISIE
+                System.out.println("Saisie");
                 input = inData.readUTF();
                 //decryptage input
                 split = input.split(";_;");
+                System.out.println(split[0] + "   " + split[1]);
                 
+                
+                //USER
+                System.out.println("User");
                 tabUser = User.getAllUser();
                 for(User user : tabUser){
-                    if(user.pseudo == split[0] || user.email == split[0]){
-                        if(user.mdp.hashCode() == Integer.parseInt(split[1]) && user.logged == false){
+                    if(split[0].equals(user.pseudo) || split[1].equals(user.email)){
+                        if(Integer.parseInt(split[1]) == user.mdp.hashCode()){
+                            System.out.println("Login Done");
                             userLog = user;
-                            alea = (int) (Math.random()*(max-min+1)+min);
-                            send = alea + ";_;" + user.concat();
-                            user.logged = true;
                             userLog.logged = true;
+                            alea = (int) (Math.random()*(max-min+1)+min);
+                            send = alea + ";_;" + userLog.concat();
+                            break;
+                        }else{
+                            System.out.println("mdp");
+                            alea = (int) (Math.random()*(max-min+1)+min);
+                            send = alea + ";_;" + false;
+                            break;
                         }
+                    }else{
+                        System.out.println("log");
+                        alea = (int) (Math.random()*(max-min+1)+min);
+                        send = alea + ";_;" + false;
                     }
                 }
                 
-                //Send user
-                System.out.println("User Sending");
                 //cryptage send
                 outData.writeUTF(send);
                 outData.flush();
                 
+                alea++;
                 input = inData.readUTF();
                 //decryptage input
-                if(!input.equals(alea)){
+                if(Integer.parseInt(input) != alea){
                     inData.close();
                     outData.close();
                     socket.close();
+                    System.out.println("NOP");
                 }
                 
+                
+                //CONV
+                System.out.println("Conv sending");
+               
                 tabConv = Conversation.getAllConv();
                 ArrayList<Conversation> tmpConv = new ArrayList<Conversation>();
                 for(Conversation conv : tabConv){
@@ -102,37 +117,33 @@ public class ThreadServer extends Thread {
                         }
                     }
                 }
-                
                 alea = (int) (Math.random()*(max-min+1)+min);
                 send = alea + ";_;" + Conversation.concat(tmpConv);
-                
-                //Send Conv
-                System.out.println("Conv sending");
                 //cryptage send
                 outData.writeUTF(send);
                 outData.flush();
                 
+                alea++;
                 input = inData.readUTF();
-                //decryptage
-                if(!input.equals(alea)){
+                //decryptage input
+                if(Integer.parseInt(input) != alea){
                     inData.close();
                     outData.close();
                     socket.close();
+                    System.out.println("NOP");
                 }
                 
-                alea = (int) (Math.random()*(max-min+1)+min);
-                send = alea + ";_;" + User.getAllUserConcat(tabUser);
                 
-                //Send tabUsers
+                //TABUSER
                 System.out.println("Tab sending");
-                outData.writeUTF(send);
-                outData.flush();
 
-                //Send Message
+                //MESSAGE
                 System.out.println("Msg sending");
 
 
                 //Final Treatment
+                System.out.println("Final Treatment");
+                
                 totClient++;
                 Server.getServer().MonitTotClient.setText(totClient+"");
                 
