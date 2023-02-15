@@ -1,7 +1,9 @@
-/home/user/Bureau/NetBeansProjects/PFE_Nebular/Server/src/main/java/pfe/nebular/server/ThreadWriting.java
-/home/user/Bureau/NetBeansProjects/PFE_Nebular/Server/src/main/java/pfe/nebular/server/Server.java
-/home/user/Bureau/NetBeansProjects/PFE_Nebular/Server/src/main/java/pfe/nebular/server/ThreadListening.java
-/home/user/Bureau/NetBeansProjects/PFE_Nebular/Server/src/main/java/pfe/nebular/server/ThreadServer.java
-/home/user/Bureau/NetBeansProjects/PFE_Nebular/Server/src/main/java/pfe/nebular/server/ConvPanel.java
-/home/user/Bureau/NetBeansProjects/PFE_Nebular/Server/src/main/java/pfe/nebular/server/Client.java
-/home/user/Bureau/NetBeansProjects/PFE_Nebular/Server/src/main/java/pfe/nebular/server/Message.java
+/home/cytech/Desktop/Project_Nebular/Server/src/main/java/classes/Conversation.java
+/home/cytech/Desktop/Project_Nebular/Server/src/main/java/server/ThreadClient.java
+/home/cytech/Desktop/Project_Nebular/Server/src/main/java/classes/User.java
+/home/cytech/Desktop/Project_Nebular/Server/src/main/java/server/ThreadServer.java
+/home/cytech/Desktop/Project_Nebular/Server/src/main/java/classes/File.java
+/home/cytech/Desktop/Project_Nebular/Server/src/main/java/server/Entity.java
+/home/cytech/Desktop/Project_Nebular/Server/src/main/java/classes/Message.java
+/home/cytech/Desktop/Project_Nebular/Server/src/main/java/server/ConvPanel.java
+/home/cytech/Desktop/Project_Nebular/Server/src/main/java/server/Server.java
