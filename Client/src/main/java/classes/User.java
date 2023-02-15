@@ -1,20 +1,69 @@
 package classes;
 
-public class User {
-    
-    public int id;
-    public String nom, prenom, mdp, email, pseudo, statut;
-    
+import java.util.ArrayList;
 
-    public User(int tmpId, String tmpNom, String tmpPrenom, String tmpEmail, String tmpPseudo) {
+public class User {
+
+    
+    
+    public int id, statut;
+    public String nom, prenom, mdp, email, pseudo;
+    public boolean logged;
+    
+    public User(){
+        this.id = 0;
+    }
+    
+    public User(int tmpId, String tmpNom, String tmpPrenom, String tmpEmail, String tmpPseudo, String tmpMdp, int tmpStatut, boolean tmpLog) {
         this.id = tmpId;
         this.nom = tmpNom;
         this.prenom = tmpPrenom;
         this.email = tmpEmail;
         this.pseudo = tmpPseudo;
+        this.mdp = tmpMdp;
+        this.statut = tmpStatut;
+        this.logged = tmpLog;
     }
-
-    public User(int tmpId){
-        this.id = tmpId;
+    
+    public String concat(){
+        return this.id + ";U;" + this.nom + ";U;" + this.prenom + ";U;" + this.email + ";U;" + this.pseudo + ";U;" + this.mdp + ";U;" + this.statut;
     }
+    
+    public String concatSpe(){
+        return this.id + ";U;" + this.nom + ";U;" + this.prenom + ";U;" + this.email + ";U;" + this.pseudo + ";U;" + this.statut;
+    }
+    
+    public static User deconcat(String concat){
+        String[] split = concat.split(";U;");
+        User user = new User(Integer.parseInt(split[0]), split[1],split[2],split[3],split[4],split[5],Integer.parseInt(split[6]), Boolean.parseBoolean(split[7]));
+        return user;
+    }
+    
+    public static ArrayList<User> getAllUser(){
+        ArrayList<User> tabUser = new ArrayList<User>();
+        
+        User user1 = new User(1,"A", "A", "a@a.a", "A", "123", 1, false);
+        User user2 = new User(1,"B", "B", "b@b.b", "B", "123", 1, false);
+        User user3 = new User(1,"C", "C", "c@c.c", "C", "123", 1, false);
+        
+        tabUser.add(user1); tabUser.add(user2); tabUser.add(user3);
+        
+        return tabUser;
+    }
+    
+    
+    public static String getAllUserConcat(ArrayList<User> tabUser) {
+        String tmp = "";
+        
+        for(int i=0; i < tabUser.size(); i++){
+            if(i<tabUser.size()){
+                tmp = tmp + tabUser.get(i).concatSpe() + ";T;";
+            }else{
+                tmp = tmp + tabUser.get(i).concatSpe();
+            }
+        }
+        
+        return tmp;
+    }
+    
 }
