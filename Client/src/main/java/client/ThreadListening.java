@@ -1,5 +1,6 @@
 package client;
 
+import classes.*;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -20,8 +21,9 @@ public class ThreadListening extends Thread {
             String line = "";
             while(!line.equals("EndOfComm")){
                 line = in.readUTF();
-                Message msg = new Message(line);
-                System.out.println(line);
+                //decrypt line
+                Message msg = Message.deconcat(line);
+                msg.print();
             }
         } catch (IOException ex) {
             System.out.println("failed listening");

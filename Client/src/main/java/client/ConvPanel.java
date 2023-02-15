@@ -4,8 +4,6 @@ import classes.Message;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ConvPanel extends javax.swing.JPanel {
     
@@ -19,8 +17,7 @@ public class ConvPanel extends javax.swing.JPanel {
         try {
             this.out = new DataOutputStream(tmpSocket.getOutputStream());
         } catch (IOException ex) {
-            Logger.getLogger(ConvPanel.class.getName()).log(Level.SEVERE, null,
-                    ex);
+            System.out.println("CONVPANEL : Can not create object");
         }
     }
 
@@ -34,7 +31,7 @@ public class ConvPanel extends javax.swing.JPanel {
         ConvBtn = new javax.swing.JButton();
         ConvTitre = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(102, 102, 102));
+        setBackground(new java.awt.Color(153, 153, 153));
 
         ConvText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -99,13 +96,14 @@ public class ConvPanel extends javax.swing.JPanel {
             try {
             Message msg = new Message(content, idExp, idConv);
             ConvArea.setText(ConvArea.getText()+"\n"+msg.concat());
+            //cryptage
             out.writeUTF(msg.concat());
             out.flush();
             ConvText.setText("");
-        } catch (IOException ex) {
-            System.out.println("writing failed");
-        }
             
+            } catch (IOException ex) {
+                System.out.println("writing failed");
+            }
         }
     }
 
