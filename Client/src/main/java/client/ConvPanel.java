@@ -97,6 +97,7 @@ public class ConvPanel extends javax.swing.JPanel {
             Message msg = new Message(content, idExp, idConv);
             ConvArea.setText(ConvArea.getText()+"\n"+msg.concat());
             //cryptage
+            System.out.println("SEND : " + msg.concat());
             out.writeUTF(msg.concat());
             out.flush();
             ConvText.setText("");

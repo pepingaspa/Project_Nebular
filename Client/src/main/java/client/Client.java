@@ -2,15 +2,16 @@ package client;
 
 import classes.*;
 import java.awt.GridLayout;
+import java.awt.Panel;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import static java.lang.Integer.max;
 import java.net.Socket;
 import java.util.ArrayList;
-import javax.imageio.ImageIO;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 public class Client extends javax.swing.JFrame {
@@ -41,7 +42,6 @@ public class Client extends javax.swing.JFrame {
         SideBarTitre = new javax.swing.JLabel();
         NewConvBtn = new javax.swing.JButton();
         CenterPanel = new javax.swing.JPanel();
-        BackGround = new javax.swing.JPanel();
         LoginPanel = new javax.swing.JPanel();
         LoginTitre = new javax.swing.JLabel();
         LoginBtn = new javax.swing.JButton();
@@ -129,27 +129,16 @@ public class Client extends javax.swing.JFrame {
         NewConvBtn.setMaximumSize(new java.awt.Dimension(81, 18));
         NewConvBtn.setMinimumSize(new java.awt.Dimension(81, 18));
         NewConvBtn.setPreferredSize(new java.awt.Dimension(81, 18));
+        NewConvBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NewConvBtnActionPerformed(evt);
+            }
+        });
         SideBar.add(NewConvBtn);
 
         CommPanel.add(SideBar, java.awt.BorderLayout.LINE_START);
 
         CenterPanel.setLayout(new java.awt.CardLayout());
-
-        BackGround.setBackground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout BackGroundLayout = new javax.swing.GroupLayout(BackGround);
-        BackGround.setLayout(BackGroundLayout);
-        BackGroundLayout.setHorizontalGroup(
-            BackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 609, Short.MAX_VALUE)
-        );
-        BackGroundLayout.setVerticalGroup(
-            BackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 610, Short.MAX_VALUE)
-        );
-
-        CenterPanel.add(BackGround, "card2");
-
         CommPanel.add(CenterPanel, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(CommPanel, "card3");
@@ -220,13 +209,16 @@ public class Client extends javax.swing.JFrame {
             System.out.println("Var creation");
             DataInputStream inData = new DataInputStream(socket.getInputStream());
             DataOutputStream outData = new DataOutputStream(socket.getOutputStream());
-            
             String input = "", send = "", tmp = "";
             String[] split;
             
             //Echange Clé
             System.out.println("Echange clés");
-            
+            input = inData.readUTF();
+            split = input.split(";_;");
+            tmp = (Integer.parseInt(split[0])+1) + "";
+            outData.writeUTF(tmp);
+            outData.flush();
             
             //Authentification
             System.out.println("Authentification");
@@ -235,7 +227,6 @@ public class Client extends javax.swing.JFrame {
             //SAISIE
             System.out.println("Saisie");
             send = LoginText.getText() + ";_;" + String.valueOf(LoginMdp.getPassword()).hashCode();
-            //cryptage send
             outData.writeUTF(send);
             outData.flush();
             
@@ -292,10 +283,36 @@ public class Client extends javax.swing.JFrame {
             
         } catch (IOException ex) {
             System.out.println("Cannot create threadlistening");
+        } catch (Exception ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_LoginBtnActionPerformed
 
+    private void NewConvBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewConvBtnActionPerformed
+        for(int i = 0; i < CenterPanel.getComponentCount(); i++){
+            if(CenterPanel.getComponents()[i].getName().equals("NewConvPanel")){
+                CenterPanel.getComponents()[i].setVisible(true);
+            }
+            else{
+                CenterPanel.getComponents()[i].setVisible(false);
+            }
+        }
+        
+    }//GEN-LAST:event_NewConvBtnActionPerformed
+
     public void createConv(){
+        
+        BackGroundPanel backGround = new BackGroundPanel();
+        backGround.setVisible(true);
+        backGround.setName("BackGround");
+        
+        CenterPanel.add(backGround);
+        ArrayList<ConvPanel> tabPanel = new ArrayList<ConvPanel>();
+        
+        NewConvPanel newConvPanel = new NewConvPanel();
+        newConvPanel.setVisible(false);
+        newConvPanel.setName("NewConvPanel");
+        CenterPanel.add(newConvPanel);
         
         
         SideBar.setLayout(new GridLayout(max(tabConv.size()+2, 10), 0));
@@ -304,7 +321,9 @@ public class Client extends javax.swing.JFrame {
             ConvPanel convPanel = new ConvPanel(socket, userLog.id, conv.id);
             convPanel.ConvTitre.setText(conv.nom);
             convPanel.setVisible(false);
+            convPanel.setName(conv.nom);
             CenterPanel.add(convPanel);
+            tabPanel.add(convPanel);
             
             Entity ent = new Entity(convPanel, conv);
             tabEntity.add(ent);
@@ -313,28 +332,24 @@ public class Client extends javax.swing.JFrame {
             btn.addActionListener( new ActionListener() {
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    showPanel(conv.id);
+                    showPanel(tabPanel, conv.nom);
+                    backGround.setVisible(false);
+                    newConvPanel.setVisible(false);
                 }
             });
             SideBar.add(btn);
-            
-            
         }
-        CommPanel.updateUI();
-        
     }
     
     
-    public void showPanel(int convId){
-        for(Entity ent : tabEntity){
-            if(ent.conv.id == convId){
-                ent.convPanel.setVisible(true);
-            }else{
-                ent.convPanel.setVisible(true);
+    public void showPanel(ArrayList<ConvPanel> tabPanel, String panelName){
+        for (int i = 0; i < tabPanel.size(); i++) {
+            if (tabPanel.get(i).getName().equals(panelName)) {
+                tabPanel.get(i).setVisible(true);
+            } else {
+                tabPanel.get(i).setVisible(false);
             }
-            CenterPanel.updateUI();
         }
-        
     }
     
     public void connectToServer(String tmpIp, String tmpPort){
@@ -410,7 +425,6 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JPanel ArpPanel;
     private javax.swing.JLabel ArpPortLabel;
     private javax.swing.JTextField ArpPortText;
-    private javax.swing.JPanel BackGround;
     private javax.swing.JPanel CenterPanel;
     private javax.swing.JPanel CommPanel;
     private javax.swing.JButton LoginBtn;

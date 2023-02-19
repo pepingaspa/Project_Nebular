@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ThreadServer extends Thread {
 
@@ -20,7 +22,7 @@ public class ThreadServer extends Thread {
     
     public ThreadServer(int port){
         try {
-            this.serverSocket = new ServerSocket(port);            
+            this.serverSocket = new ServerSocket(port);
             System.out.println("Server launching on port : " + port);
             this.create = true;
         } catch (IOException ex) {
@@ -34,15 +36,15 @@ public class ThreadServer extends Thread {
         running = true;
         System.out.println("Server started !");
         while(running){
+            Socket socket;
             try {
-                Socket socket = serverSocket.accept();
+                socket = serverSocket.accept();
                 
                 //Variable
                 System.out.println("Var creation");
                 
                 DataInputStream inData = new DataInputStream(socket.getInputStream());
                 DataOutputStream outData = new DataOutputStream(socket.getOutputStream());
-                
                 String input = "",send = "";
                 String[] split;
                 User userLog = new User();
@@ -50,7 +52,20 @@ public class ThreadServer extends Thread {
                 
                 //Echange Clé
                 System.out.println("Echange clés");
-
+                alea = (int) (Math.random()*(max-min+1)+min);
+                send = alea + ";_;" + "COUCOU";
+                outData.writeUTF(send);
+                outData.flush();
+                alea++;
+                input = inData.readUTF();
+                //decryptage input
+                if(Integer.parseInt(input) != alea){
+                    inData.close();
+                    outData.close();
+                    socket.close();
+                    System.out.println("NOP");
+                }
+                
 
                 //Authentification
                 System.out.println("Authentification");
@@ -59,7 +74,7 @@ public class ThreadServer extends Thread {
                 //SAISIE
                 System.out.println("Saisie");
                 input = inData.readUTF();
-                //decryptage input
+                //input = cypher.decrypt(input);
                 split = input.split(";_;");
                 System.out.println(split[0] + "   " + split[1]);
                 
@@ -149,6 +164,7 @@ public class ThreadServer extends Thread {
                 
                 ThreadClient threadClient = new ThreadClient(socket);
                 threadClient.start();
+                
                 Entity ent = new Entity(threadClient, userLog);
                 
                 tabEntity.add(ent);
@@ -157,6 +173,8 @@ public class ThreadServer extends Thread {
                 
             } catch (IOException ex) {
                 System.out.println("Server failed to accept client !");
+            } catch (Exception ex) {
+                Logger.getLogger(ThreadServer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         System.out.println("Exit while loop.");

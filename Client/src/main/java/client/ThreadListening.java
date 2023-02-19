@@ -23,6 +23,7 @@ public class ThreadListening extends Thread {
                 line = in.readUTF();
                 //decrypt line
                 Message msg = Message.deconcat(line);
+                System.out.print("RECEIVED : ");
                 msg.print();
             }
         } catch (IOException ex) {
