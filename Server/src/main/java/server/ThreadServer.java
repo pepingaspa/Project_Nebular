@@ -84,12 +84,13 @@ public class ThreadServer extends Thread {
                 tabUser = User.getAllUser();
                 for(User user : tabUser){
                     if(split[0].equals(user.pseudo) || split[1].equals(user.email)){
-                        if(Integer.parseInt(split[1]) == user.mdp.hashCode()){
+                        if(Integer.parseInt(split[1]) == user.mdp.hashCode() && user.logged == false){
                             System.out.println("Login Done");
                             userLog = user;
-                            userLog.logged = true;
+                            user.logged = true;
                             alea = (int) (Math.random()*(max-min+1)+min);
                             send = alea + ";_;" + userLog.concat();
+                            User.saveTab(tabUser);
                             break;
                         }else{
                             System.out.println("mdp");

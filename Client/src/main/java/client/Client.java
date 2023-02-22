@@ -6,6 +6,7 @@ import java.awt.Panel;
 import java.awt.event.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import static java.lang.Integer.max;
 import java.net.Socket;
@@ -30,7 +31,6 @@ public class Client extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
         ArpPanel = new javax.swing.JPanel();
         ArpIpLabel = new javax.swing.JLabel();
         ArpIpText = new javax.swing.JTextField();
@@ -47,17 +47,6 @@ public class Client extends javax.swing.JFrame {
         LoginBtn = new javax.swing.JButton();
         LoginText = new javax.swing.JTextField();
         LoginMdp = new javax.swing.JPasswordField();
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setSize(new java.awt.Dimension(600, 600));
@@ -278,7 +267,7 @@ public class Client extends javax.swing.JFrame {
             
             LoginPanel.setVisible(false);
             CommPanel.setVisible(true); 
-            
+
             
             
         } catch (IOException ex) {
@@ -435,6 +424,5 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JButton NewConvBtn;
     private javax.swing.JPanel SideBar;
     private javax.swing.JLabel SideBarTitre;
-    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

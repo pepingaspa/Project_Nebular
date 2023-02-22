@@ -2,8 +2,13 @@ package client;
 
 import classes.Message;
 import java.io.DataOutputStream;
+import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.Socket;
+import javax.swing.JFileChooser;
 
 public class ConvPanel extends javax.swing.JPanel {
     
@@ -30,6 +35,7 @@ public class ConvPanel extends javax.swing.JPanel {
         ConvArea = new javax.swing.JTextArea();
         ConvBtn = new javax.swing.JButton();
         ConvTitre = new javax.swing.JLabel();
+        FileBtn = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(153, 153, 153));
 
@@ -53,6 +59,13 @@ public class ConvPanel extends javax.swing.JPanel {
         ConvTitre.setForeground(new java.awt.Color(255, 255, 255));
         ConvTitre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
+        FileBtn.setText("File");
+        FileBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FileBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -65,7 +78,10 @@ public class ConvPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(ConvText, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ConvBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)))
+                        .addComponent(ConvBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(FileBtn)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -78,7 +94,8 @@ public class ConvPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ConvText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ConvBtn))
+                    .addComponent(ConvBtn)
+                    .addComponent(FileBtn))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -90,6 +107,23 @@ public class ConvPanel extends javax.swing.JPanel {
     private void ConvBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConvBtnActionPerformed
         write(ConvText.getText());
     }//GEN-LAST:event_ConvBtnActionPerformed
+
+    private void FileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileBtnActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        int returnVal = fileChooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+//            String[] split = file.getName().split("\\.");
+//            String name = split[0];
+//            String extension = split[1];
+//
+//            File outf = new File(name+"_2."+extension);
+            
+            
+        } else {
+            System.out.println("File access cancelled by user.");
+        }
+    }//GEN-LAST:event_FileBtnActionPerformed
 
     public void write(String content){
         if(!content.isEmpty() && !content.isBlank()){
@@ -114,5 +148,6 @@ public class ConvPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane ConvScroll;
     private javax.swing.JTextField ConvText;
     public javax.swing.JLabel ConvTitre;
+    private javax.swing.JButton FileBtn;
     // End of variables declaration//GEN-END:variables
 }

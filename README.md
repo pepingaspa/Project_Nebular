@@ -45,3 +45,17 @@ Once the socket connection is done, server and client needs to authenticate to e
 * Step 5 :
 
     Server and client are now authentify. The user can log in.
+
+---
+
+## REMAINING TASKS :
+
+* Message class config
+
+* Protoco  trust review
+
+* Message transfert clear
+
+* Cypher merge
+
+* Database
