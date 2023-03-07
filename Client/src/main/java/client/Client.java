@@ -1,11 +1,18 @@
 package client;
 
 import classes.*;
+import java.awt.GridLayout;
+import java.awt.Panel;
+import java.awt.event.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import static java.lang.Integer.max;
 import java.net.Socket;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.*;
 
 public class Client extends javax.swing.JFrame {
 
@@ -15,29 +22,42 @@ public class Client extends javax.swing.JFrame {
     }
 
     Socket socket;
-    int idExp;
-    DataInputStream inData;
-    DataOutputStream outData;
-    User logUser;
-
+    User userLog;
+    ArrayList<Conversation> tabConv = new ArrayList<Conversation>();
+    ArrayList<Entity> tabEntity = new ArrayList<Entity>();
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         ArpPanel = new javax.swing.JPanel();
         ArpIpLabel = new javax.swing.JLabel();
         ArpIpText = new javax.swing.JTextField();
         ArpPortLabel = new javax.swing.JLabel();
         ArpPortText = new javax.swing.JTextField();
         ArpButton = new javax.swing.JButton();
-        MsgPanel = new javax.swing.JPanel();
-        MsgLabel = new javax.swing.JLabel();
-        MsgText = new javax.swing.JTextField();
+        CommPanel = new javax.swing.JPanel();
+        SideBar = new javax.swing.JPanel();
+        SideBarTitre = new javax.swing.JLabel();
+        NewConvBtn = new javax.swing.JButton();
+        CenterPanel = new javax.swing.JPanel();
         LoginPanel = new javax.swing.JPanel();
         LoginTitre = new javax.swing.JLabel();
         LoginBtn = new javax.swing.JButton();
         LoginText = new javax.swing.JTextField();
         LoginMdp = new javax.swing.JPasswordField();
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setSize(new java.awt.Dimension(600, 600));
@@ -73,8 +93,8 @@ public class Client extends javax.swing.JFrame {
                                 .addGap(17, 17, 17))))
                     .addGroup(ArpPanelLayout.createSequentialGroup()
                         .addGap(338, 338, 338)
-                        .addComponent(ArpIpText, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)))
-                .addContainerGap(168, Short.MAX_VALUE))
+                        .addComponent(ArpIpText, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)))
+                .addContainerGap(231, Short.MAX_VALUE))
         );
         ArpPanelLayout.setVerticalGroup(
             ArpPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -89,42 +109,39 @@ public class Client extends javax.swing.JFrame {
                 .addComponent(ArpPortText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(ArpButton)
-                .addContainerGap(191, Short.MAX_VALUE))
+                .addContainerGap(270, Short.MAX_VALUE))
         );
 
         getContentPane().add(ArpPanel, "card2");
 
-        MsgText.addActionListener(new java.awt.event.ActionListener() {
+        CommPanel.setLayout(new java.awt.BorderLayout());
+
+        SideBar.setBackground(new java.awt.Color(204, 204, 204));
+        SideBar.setPreferredSize(new java.awt.Dimension(150, 536));
+        SideBar.setLayout(new java.awt.GridLayout(10, 0));
+
+        SideBarTitre.setBackground(new java.awt.Color(204, 255, 255));
+        SideBarTitre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        SideBarTitre.setText("CONTACTS");
+        SideBar.add(SideBarTitre);
+
+        NewConvBtn.setText("Create Conv");
+        NewConvBtn.setMaximumSize(new java.awt.Dimension(81, 18));
+        NewConvBtn.setMinimumSize(new java.awt.Dimension(81, 18));
+        NewConvBtn.setPreferredSize(new java.awt.Dimension(81, 18));
+        NewConvBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MsgTextActionPerformed(evt);
+                NewConvBtnActionPerformed(evt);
             }
         });
+        SideBar.add(NewConvBtn);
 
-        javax.swing.GroupLayout MsgPanelLayout = new javax.swing.GroupLayout(MsgPanel);
-        MsgPanel.setLayout(MsgPanelLayout);
-        MsgPanelLayout.setHorizontalGroup(
-            MsgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(MsgPanelLayout.createSequentialGroup()
-                .addContainerGap(148, Short.MAX_VALUE)
-                .addGroup(MsgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MsgPanelLayout.createSequentialGroup()
-                        .addComponent(MsgText, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(77, 77, 77))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MsgPanelLayout.createSequentialGroup()
-                        .addComponent(MsgLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(188, 188, 188))))
-        );
-        MsgPanelLayout.setVerticalGroup(
-            MsgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(MsgPanelLayout.createSequentialGroup()
-                .addGap(123, 123, 123)
-                .addComponent(MsgLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(69, 69, 69)
-                .addComponent(MsgText, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(240, Short.MAX_VALUE))
-        );
+        CommPanel.add(SideBar, java.awt.BorderLayout.LINE_START);
 
-        getContentPane().add(MsgPanel, "card3");
+        CenterPanel.setLayout(new java.awt.CardLayout());
+        CommPanel.add(CenterPanel, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(CommPanel, "card3");
 
         LoginTitre.setText("Expéditeur");
 
@@ -150,12 +167,12 @@ public class Client extends javax.swing.JFrame {
                     .addGroup(LoginPanelLayout.createSequentialGroup()
                         .addGap(249, 249, 249)
                         .addComponent(LoginMdp, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(257, Short.MAX_VALUE))
+                .addContainerGap(383, Short.MAX_VALUE))
             .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(LoginPanelLayout.createSequentialGroup()
                     .addGap(252, 252, 252)
                     .addComponent(LoginText, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(271, Short.MAX_VALUE)))
+                    .addContainerGap(397, Short.MAX_VALUE)))
         );
         LoginPanelLayout.setVerticalGroup(
             LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -166,12 +183,12 @@ public class Client extends javax.swing.JFrame {
                 .addComponent(LoginMdp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(48, 48, 48)
                 .addComponent(LoginBtn)
-                .addContainerGap(208, Short.MAX_VALUE))
+                .addContainerGap(284, Short.MAX_VALUE))
             .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(LoginPanelLayout.createSequentialGroup()
                     .addGap(155, 155, 155)
                     .addComponent(LoginText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(356, Short.MAX_VALUE)))
+                    .addContainerGap(431, Short.MAX_VALUE)))
         );
 
         getContentPane().add(LoginPanel, "card4");
@@ -185,71 +202,159 @@ public class Client extends javax.swing.JFrame {
         connectToServer(ip, port);
     }//GEN-LAST:event_ArpButtonActionPerformed
 
-    private void MsgTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MsgTextActionPerformed
-        try {
-            Message msg = new Message(MsgText.getText(), idExp);
-            outData.writeUTF(msg.Concat());
-            outData.flush();
-        } catch (IOException ex) {
-            System.out.println("writing failed");
-        }
-        
-    }//GEN-LAST:event_MsgTextActionPerformed
-
     private void LoginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginBtnActionPerformed
         
         try {
             //Variable
             System.out.println("Var creation");
-            inData = new DataInputStream(socket.getInputStream());
-            outData = new DataOutputStream(socket.getOutputStream());
+            DataInputStream inData = new DataInputStream(socket.getInputStream());
+            DataOutputStream outData = new DataOutputStream(socket.getOutputStream());
+            String input = "", send = "", tmp = "";
+            String[] split;
             
             //Echange Clé
             System.out.println("Echange clés");
-            
+            input = inData.readUTF();
+            split = input.split(";_;");
+            tmp = (Integer.parseInt(split[0])+1) + "";
+            outData.writeUTF(tmp);
+            outData.flush();
             
             //Authentification
             System.out.println("Authentification");
             
             
-            //Envoie saisie
+            
+            
+            
+            
+            //SAISIE
             System.out.println("Saisie");
-            String saisie = LoginText.getText() + ";_;" + Arrays.hashCode(LoginMdp.getPassword());
-            outData.writeUTF(saisie);
-            
-            //Reception user
-            System.out.println("User reception");
+            send = LoginText.getText() + ";_;" + String.valueOf(LoginMdp.getPassword()).hashCode();
+            outData.writeUTF(send);
+            outData.flush();
             
             
-            //Reception Conv
-            System.out.println("Conv reception");
+            //USER
+            System.out.println("User");
+            input = inData.readUTF();
+            //decryptage input
+            split = input.split(";_;");
+            userLog = User.deconcat(split[1]);
+            tmp = (Integer.parseInt(split[0])+1) + "";
+            //cryptage tmp
+            outData.writeUTF(tmp);
+            outData.flush();
             
             
-            //Reception tabUsers
-            System.out.println("Tab reception");
+            //CONV
+            System.out.println("Conv");
+            
+            input = inData.readUTF();
+            //decryptage input
+            System.out.println(input);
+            split = input.split(";_;");
+            tabConv = Conversation.deconcatTab(split[1]);
+            //cryptage send
+            tmp = (Integer.parseInt(split[0])+1) + "";
+            //cryptage tmp
+            outData.writeUTF(tmp);
+            outData.flush();
             
             
-            //Reception Message
-            System.out.println("Msg reception");
+            //TABUSERS
+            System.out.println("Tab");
+            
+            
+            //MESSAGE
+            System.out.println("Msg");
             
             
             //Final Treatment
             System.out.println("Final Treatment");
             
-            idExp = Integer.parseInt(LoginText.getText());
             
-            ThreadListening listening = new ThreadListening(socket, MsgText, MsgLabel);
+            
+            ThreadListening listening = new ThreadListening(socket);
             listening.start();
+            
+            createConv();
+            
             LoginPanel.setVisible(false);
-            MsgPanel.setVisible(true);
+            CommPanel.setVisible(true); 
+            
+            
+            
         } catch (IOException ex) {
             System.out.println("Cannot create threadlistening");
+        } catch (Exception ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
     }//GEN-LAST:event_LoginBtnActionPerformed
 
+    private void NewConvBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewConvBtnActionPerformed
+        for(int i = 0; i < CenterPanel.getComponentCount(); i++){
+            if(CenterPanel.getComponents()[i].getName().equals("NewConvPanel")){
+                CenterPanel.getComponents()[i].setVisible(true);
+            }
+            else{
+                CenterPanel.getComponents()[i].setVisible(false);
+            }
+        }
+        
+    }//GEN-LAST:event_NewConvBtnActionPerformed
+
+    public void createConv(){
+        
+        BackGroundPanel backGround = new BackGroundPanel();
+        backGround.setVisible(true);
+        backGround.setName("BackGround");
+        
+        CenterPanel.add(backGround);
+        ArrayList<ConvPanel> tabPanel = new ArrayList<ConvPanel>();
+        
+        NewConvPanel newConvPanel = new NewConvPanel();
+        newConvPanel.setVisible(false);
+        newConvPanel.setName("NewConvPanel");
+        CenterPanel.add(newConvPanel);
+        
+        
+        SideBar.setLayout(new GridLayout(max(tabConv.size()+2, 10), 0));
+        for(Conversation conv : tabConv){
+            
+            ConvPanel convPanel = new ConvPanel(socket, userLog.id, conv.id);
+            convPanel.ConvTitre.setText(conv.nom);
+            convPanel.setVisible(false);
+            convPanel.setName(conv.nom);
+            CenterPanel.add(convPanel);
+            tabPanel.add(convPanel);
+            
+            Entity ent = new Entity(convPanel, conv);
+            tabEntity.add(ent);
+            JButton btn = new JButton(conv.nom);
+            btn.setSize(81,18);
+            btn.addActionListener( new ActionListener() {
+                @Override
+                public void actionPerformed( ActionEvent e ) {
+                    showPanel(tabPanel, conv.nom);
+                    backGround.setVisible(false);
+                    newConvPanel.setVisible(false);
+                }
+            });
+            SideBar.add(btn);
+        }
+    }
     
+    
+    public void showPanel(ArrayList<ConvPanel> tabPanel, String panelName){
+        for (int i = 0; i < tabPanel.size(); i++) {
+            if (tabPanel.get(i).getName().equals(panelName)) {
+                tabPanel.get(i).setVisible(true);
+            } else {
+                tabPanel.get(i).setVisible(false);
+            }
+        }
+    }
     
     public void connectToServer(String tmpIp, String tmpPort){
         
@@ -324,13 +429,16 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JPanel ArpPanel;
     private javax.swing.JLabel ArpPortLabel;
     private javax.swing.JTextField ArpPortText;
+    private javax.swing.JPanel CenterPanel;
+    private javax.swing.JPanel CommPanel;
     private javax.swing.JButton LoginBtn;
     private javax.swing.JPasswordField LoginMdp;
     private javax.swing.JPanel LoginPanel;
     private javax.swing.JTextField LoginText;
     private javax.swing.JLabel LoginTitre;
-    private javax.swing.JLabel MsgLabel;
-    private javax.swing.JPanel MsgPanel;
-    private javax.swing.JTextField MsgText;
+    private javax.swing.JButton NewConvBtn;
+    private javax.swing.JPanel SideBar;
+    private javax.swing.JLabel SideBarTitre;
+    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

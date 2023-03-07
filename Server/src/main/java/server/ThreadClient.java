@@ -41,6 +41,7 @@ public class ThreadClient extends Thread {
             while(!"CommOver".equals(line)){
                 try {
                     line = in.readUTF();
+                    //decrypt line
                     Message msg = Message.deconcat(line);
                     msg.print();
                     Conversation conv = ThreadServer.getConv(msg.idConv);

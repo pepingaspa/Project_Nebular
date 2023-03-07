@@ -35,13 +35,13 @@ public class Conversation implements Serializable {
     public String concat(){
         String tmp = this.id + ";C;" + this.nom + ";C;" + this.desc + ";C;";
         for(Integer i : this.tabUsers){
-            if(i<this.tabUsers.size()-1){
+            if(i == this.tabUsers.size()-1){
                 tmp = tmp + i + ";Ct;";
             }else{
                 tmp = tmp + i;
             }
         }
-        System.out.println(tmp);
+        //System.out.println(tmp);
         return tmp;
     }
     
@@ -50,14 +50,19 @@ public class Conversation implements Serializable {
         ArrayList<Integer> tmp = new ArrayList<Integer>();
         String[] split2 = split[3].split(";Ct;");
         for(String str : split2){
-            tmp.add(Integer.parseInt(str));
+            tmp.add(Integer.valueOf(str));
         }
         Conversation conv = new Conversation(Integer.parseInt(split[0]), split[1], split[2], tmp);
         return conv;
     }
     
+    public void print(){
+        String tmp = this.id + " " + this.nom + " " + this.desc + " " + this.tabUsers.toString();
+        System.out.println(tmp);
+    }
+    
     public static ArrayList<Conversation> getAllConv(){
-        ArrayList<Conversation> tabUser = new ArrayList<Conversation>();
+        ArrayList<Conversation> tabConv = new ArrayList<Conversation>();
         
         ArrayList<Integer> tab1 = new ArrayList<Integer>();
         tab1.add(1); tab1.add(2);
@@ -65,15 +70,14 @@ public class Conversation implements Serializable {
         
         ArrayList<Integer> tab2 = new ArrayList<Integer>();
         tab2.add(1); tab2.add(3);
-        Conversation conv2 = new Conversation(1,"Conv1", "Cool", tab2);
+        Conversation conv2 = new Conversation(2,"AAACC", "Toto", tab2);
         
         ArrayList<Integer> tab3 = new ArrayList<Integer>();
-        tab1.add(2); tab1.add(3);
-        Conversation conv3 = new Conversation(1,"Conv1", "Cool", tab3);
+        tab3.add(2); tab3.add(3);
+        Conversation conv3 = new Conversation(3,"BCBCB", "Yeas", tab3);
         
-        tabUser.add(conv1); tabUser.add(conv2); tabUser.add(conv3);
-        
-        return tabUser;
+        tabConv.add(conv1); tabConv.add(conv2); tabConv.add(conv3);
+        return tabConv;
     }
     
     public static String concat(ArrayList<Conversation> tabConv){
@@ -85,7 +89,18 @@ public class Conversation implements Serializable {
                 tmp = tmp + tabConv.get(i).concat();
             }
         }
+        System.out.println(tmp);
         return tmp;
+    }
+    
+    public static ArrayList<Conversation> deconcatTab(String concat){
+        ArrayList<Conversation> tmpConv = new ArrayList<Conversation>();
+        String[] split = concat.split(";T;");
+        for(String str : split){
+            Conversation conv = Conversation.deconcat(str);
+            tmpConv.add(conv);
+        }
+        return tmpConv;
     }
     
 }
