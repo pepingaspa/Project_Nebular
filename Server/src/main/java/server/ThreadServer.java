@@ -4,9 +4,11 @@ import classes.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,6 +17,7 @@ public class ThreadServer extends Thread {
     ServerSocket serverSocket;
     boolean create = false, running = false;
     int totClient = 0;
+    int n = 1926305761;
     
     static ArrayList<Entity> tabEntity = new ArrayList<Entity>();
     static ArrayList<Conversation> tabConv;
@@ -50,6 +53,9 @@ public class ThreadServer extends Thread {
                 User userLog = new User();
                 int min = 1, max = 500000, alea = 0;
                 
+                //init clé
+                
+                
                 //Echange Clé
                 System.out.println("Echange clés");
                 alea = (int) (Math.random()*(max-min+1)+min);
@@ -70,11 +76,51 @@ public class ThreadServer extends Thread {
                 //Authentification
                 System.out.println("Authentification");
                 
-
+                input = inData.readUTF();
+                split = input.split(";");
                 
+                long x = Long.parseLong(split[0]);
+                long[] tabV2 = new long[100];
                 
+                for(int i = 1; i<split.length; i++){
+                    tabV2[i-1] = Long.parseLong(split[i]);
+                }
+                   
+                int[] tabBy = new int[100];
+                for(int i=0; i<100; i++){
+                    tabBy[i] = (int) (Math.round(Math.random()));
+                }
                 
+                send = tabBy[0] +"";
+                for(int i=1; i<100; i++){
+                    send = send + ";" + tabBy[i];
+                }
                 
+                outData.writeUTF(send);
+                outData.flush();
+                
+                input = inData.readUTF();
+                split = input.split(";");
+                
+                long[] tabZ = new long[100];
+                for(int i=0; i<100; i++){
+                    tabZ[i] = Long.parseLong(split[i]);
+                }
+                
+                int cmp = 0;
+                for(int i=0; i<100; i++){
+                    if(tabBy[i] == 0){
+                        if(((tabZ[i] * tabZ[i]) % n) != tabV2[i]){
+                            cmp ++;
+                        }
+                    }
+                    if(tabBy[i] == 1){
+                        if(((tabZ[i] * tabZ[i]) % n) != ((x * tabV2[i]) % n)){
+                            cmp ++;
+                        }
+                    }
+                }
+                System.out.println("CMP "+cmp);
                 
                 //SAISIE
                 System.out.println("Saisie");

@@ -8,8 +8,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import static java.lang.Integer.max;
+import java.math.BigInteger;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -25,6 +27,7 @@ public class Client extends javax.swing.JFrame {
     User userLog;
     ArrayList<Conversation> tabConv = new ArrayList<Conversation>();
     ArrayList<Entity> tabEntity = new ArrayList<Entity>();
+    int n = 1926305761;
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -212,20 +215,6 @@ public class Client extends javax.swing.JFrame {
             String input = "", send = "", tmp = "";
             String[] split;
             
-            //Echange Clé
-            System.out.println("Echange clés");
-            input = inData.readUTF();
-            split = input.split(";_;");
-            tmp = (Integer.parseInt(split[0])+1) + "";
-            outData.writeUTF(tmp);
-            outData.flush();
-            
-            //Authentification
-            System.out.println("Authentification");
-            
-            
-            
-            
             
             
             //SAISIE
@@ -368,10 +357,69 @@ public class Client extends javax.swing.JFrame {
         try {
             socket = new Socket(tmpIp, port);
             System.out.println("Connextion achieve");
+            //Variable
+            System.out.println("Var creation");
+            DataInputStream inData = new DataInputStream(socket.getInputStream());
+            DataOutputStream outData = new DataOutputStream(socket.getOutputStream());
+            String input = "", send = "", tmp = "";
+            String[] split;
+            
+            //init clé
+            
+            
+            
+            //Echange Clé
+            System.out.println("Echange clés");
+            input = inData.readUTF();
+            split = input.split(";_;");
+            tmp = (Integer.parseInt(split[0])+1) + "";
+            outData.writeUTF(tmp);
+            outData.flush();
+            
+            //Authentification
+            System.out.println("Authentification");
+            
+            send = "";
+            
+            int r = (int) (Math.random()*(n-1)+1);
+            long x = (r * r) % n;
+            send = x + "";
+            long[] tabV = new long[100];
+            long[] tabV2 = new long[100];
+            long[] tabZ = new long[100];
+            
+            for(int i = 0; i<100; i++){
+                tabV[i] = (int) (Math.random()*(n-1)+1);
+                tabV2[i] = (tabV[i] * tabV[i]) % n;
+                send = send + ";" + tabV2[i];
+            }
+            
+            outData.writeUTF(send);
+            outData.flush();
+            
+            input = inData.readUTF();
+            split = input.split(";");
+            
+            for(int i = 0; i<100; i++){
+                if("0".equals(split[i])){
+                    tabZ[i] = tabV2[i];
+                }
+                if("1".equals(split[i])){
+                    tabZ[i] = (r * tabV2[i]) % n;
+                }
+            }
+            
+            send = tabZ[0] + "";
+            for(int i = 1; i<100; i++){
+                send += ";" + tabZ[i];
+            }
+            
+            outData.writeUTF(send);
+            outData.flush();
+            
+            
             ArpPanel.setVisible(false);
             LoginPanel.setVisible(true);
-            
-            
         } catch (IOException ex) {
             System.out.println("Can not connet to the server !");
         }
