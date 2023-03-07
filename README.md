@@ -1,11 +1,11 @@
 # NEBULAR
 
 
-Nebular is a project lead by a group of students in cybersecurity à CYTech Cergy Paris.
+Nebular is a project led by a group of students in cybersecurity in CYTech Cergy Paris.
 
 ## AUTHORS
 
-Alan DABRWOSKI - Téo MARTIN - Gaspard PEPIN
+Alan DABROWSKI - Téo MARTIN - Gaspard PEPIN
 
 ---
 
@@ -22,7 +22,7 @@ SQL DBeaver
 This protocol is the process to authentify the server and the client. 
 
 The ARP protocol is done and the client try to connect using a socket to the server socket.
-Once the socket connection is done, server and client needs to authenticate to each other.
+Once the socket connection is done, server and client need to authenticate to each other.
 
 1st step: The client pings the server to announce it wishes to establish a connection with it.
 On its side, the server gets the MAC address of the said client using the socket. From this and the universal time it generates a one-time key that will be used for the first communication.
@@ -39,4 +39,3 @@ This process is thought to double authenticate the client and authenticate once 
 To this extent, we use a nonce challenge once, as a two-way authentication with 3 messages. Then we use the zero-knowledge authentication to authenticate the client.
 We chose to only authenticate the server once, because it is the one initiating everything during the first interaction. Since the client was only just answering this whole time (even though it could obviously not answer the good things if it didn’t know the shared secret), we chose to authenticate it a second time through a zero-knowledge challenge, with a hundred attempts. That way it has ½100 chances to be right without knowing the secret. That makes about 1 over 1030 time right when it shouldn’t be. This lets us be pretty sure about the fact that both the server and client are the good ones.
 We thought about preventing brute-force intrusions by putting a limit to the number of attempts of connection before black-listing an IP or a MAC for about 10-15 minutes, but it hasn’t been implemented yet.
-
