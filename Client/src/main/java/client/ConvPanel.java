@@ -2,12 +2,13 @@ package client;
 
 import classes.Message;
 import java.io.DataOutputStream;
-import java.io.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 
 public class ConvPanel extends javax.swing.JPanel {
@@ -35,7 +36,7 @@ public class ConvPanel extends javax.swing.JPanel {
         ConvArea = new javax.swing.JTextArea();
         ConvBtn = new javax.swing.JButton();
         ConvTitre = new javax.swing.JLabel();
-        FileBtn = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(153, 153, 153));
 
@@ -59,10 +60,10 @@ public class ConvPanel extends javax.swing.JPanel {
         ConvTitre.setForeground(new java.awt.Color(255, 255, 255));
         ConvTitre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
-        FileBtn.setText("File");
-        FileBtn.addActionListener(new java.awt.event.ActionListener() {
+        jButton1.setText("File");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FileBtnActionPerformed(evt);
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -76,12 +77,11 @@ public class ConvPanel extends javax.swing.JPanel {
                     .addComponent(ConvTitre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(ConvScroll)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(ConvText, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ConvBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ConvText, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(ConvBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(FileBtn)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jButton1)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -95,7 +95,7 @@ public class ConvPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ConvText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ConvBtn)
-                    .addComponent(FileBtn))
+                    .addComponent(jButton1))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -108,28 +108,22 @@ public class ConvPanel extends javax.swing.JPanel {
         write(ConvText.getText());
     }//GEN-LAST:event_ConvBtnActionPerformed
 
-    private void FileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileBtnActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFileChooser fileChooser = new JFileChooser();
-        int returnVal = fileChooser.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
+        int ret = fileChooser.showOpenDialog(this);
+        if(ret == JFileChooser.APPROVE_OPTION){
             File file = fileChooser.getSelectedFile();
-//            String[] split = file.getName().split("\\.");
-//            String name = split[0];
-//            String extension = split[1];
-//
-//            File outf = new File(name+"_2."+extension);
-            
-            
-        } else {
-            System.out.println("File access cancelled by user.");
+            write(file);
         }
-    }//GEN-LAST:event_FileBtnActionPerformed
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     public void write(String content){
         if(!content.isEmpty() && !content.isBlank()){
             try {
-            Message msg = new Message(content, idExp, idConv);
-            ConvArea.setText(ConvArea.getText()+"\n"+msg.concat());
+            LocalDateTime myDateObj = LocalDateTime.now();
+            DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            Message msg = new Message(0, idConv, idExp, true, content, true, myDateObj.format(myFormatObj));
+            ConvArea.setText(ConvArea.getText()+msg.concat()+"\n");
             //cryptage
             System.out.println("SEND : " + msg.concat());
             out.writeUTF(msg.concat());
@@ -137,8 +131,24 @@ public class ConvPanel extends javax.swing.JPanel {
             ConvText.setText("");
             
             } catch (IOException ex) {
-                System.out.println("writing failed");
+                System.out.println("writing string failed");
             }
+        }
+    }
+    
+    
+    public void write(File file){
+        try{
+            LocalDateTime myDateObj = LocalDateTime.now();
+            DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            Message msg = new Message(0, idConv, idExp, true, file, true, myDateObj.format(myFormatObj));
+            ConvArea.setText(ConvArea.getText() + "File sent\n");
+            //cryptage
+            System.out.println("SEND FILE");
+            out.writeUTF(msg.concat());
+            out.flush();
+        }catch (IOException ex){
+            Logger.getLogger(Message.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -148,6 +158,6 @@ public class ConvPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane ConvScroll;
     private javax.swing.JTextField ConvText;
     public javax.swing.JLabel ConvTitre;
-    private javax.swing.JButton FileBtn;
+    private javax.swing.JButton jButton1;
     // End of variables declaration//GEN-END:variables
 }

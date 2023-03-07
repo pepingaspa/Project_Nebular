@@ -71,6 +71,11 @@ public class ThreadServer extends Thread {
                 System.out.println("Authentification");
                 
 
+                
+                
+                
+                
+                
                 //SAISIE
                 System.out.println("Saisie");
                 input = inData.readUTF();
@@ -84,13 +89,12 @@ public class ThreadServer extends Thread {
                 tabUser = User.getAllUser();
                 for(User user : tabUser){
                     if(split[0].equals(user.pseudo) || split[1].equals(user.email)){
-                        if(Integer.parseInt(split[1]) == user.mdp.hashCode() && user.logged == false){
+                        if(Integer.parseInt(split[1]) == user.mdp.hashCode()){
                             System.out.println("Login Done");
                             userLog = user;
-                            user.logged = true;
+                            userLog.logged = true;
                             alea = (int) (Math.random()*(max-min+1)+min);
                             send = alea + ";_;" + userLog.concat();
-                            User.saveTab(tabUser);
                             break;
                         }else{
                             System.out.println("mdp");

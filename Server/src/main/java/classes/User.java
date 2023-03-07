@@ -72,8 +72,4 @@ public class User {
         return tmp;
     }
     
-    public static void saveTab(ArrayList<User> tabUser){
-        
-    }
-    
 }
