@@ -1,5 +1,6 @@
 package client;
 
+import classes.Cryptage;
 import classes.Message;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -9,17 +10,20 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.SecretKey;
 import javax.swing.JFileChooser;
 
 public class ConvPanel extends javax.swing.JPanel {
     
     DataOutputStream out;
     public int idExp, idConv;
+    SecretKey keyDef;
     
     public ConvPanel(Socket tmpSocket, int idExp, int idConv) {
         initComponents();
         this.idExp = idExp;
         this.idConv = idConv;
+        this.keyDef = Client.getKeyDef();
         try {
             this.out = new DataOutputStream(tmpSocket.getOutputStream());
         } catch (IOException ex) {
@@ -123,15 +127,14 @@ public class ConvPanel extends javax.swing.JPanel {
             LocalDateTime myDateObj = LocalDateTime.now();
             DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
             Message msg = new Message(0, idConv, idExp, true, content, true, myDateObj.format(myFormatObj));
-            ConvArea.setText(ConvArea.getText()+msg.concat()+"\n");
-            //cryptage
-            System.out.println("SEND : " + msg.concat());
-            out.writeUTF(msg.concat());
+            ConvArea.setText(ConvArea.getText()+msg.affichage()+"\n");
+            String send = Cryptage.encrypt(msg.concat(), keyDef);
+            out.writeUTF(send);
             out.flush();
             ConvText.setText("");
             
-            } catch (IOException ex) {
-                System.out.println("writing string failed");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -142,13 +145,14 @@ public class ConvPanel extends javax.swing.JPanel {
             LocalDateTime myDateObj = LocalDateTime.now();
             DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
             Message msg = new Message(0, idConv, idExp, true, file, true, myDateObj.format(myFormatObj));
-            ConvArea.setText(ConvArea.getText() + "File sent\n");
-            //cryptage
+            ConvArea.setText(ConvArea.getText() + "File sent" + "\n");
+            String send = Cryptage.encrypt(msg.concat(), keyDef);
             System.out.println("SEND FILE");
-            out.writeUTF(msg.concat());
+            //découpage
+            out.writeUTF(send);
             out.flush();
-        }catch (IOException ex){
-            Logger.getLogger(Message.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (IOException e){
+            e.printStackTrace();
         }
     }
 
