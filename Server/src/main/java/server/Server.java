@@ -1,17 +1,22 @@
 package server;
 
-import classes.*;
 import java.io.IOException;
 import static java.lang.System.exit;
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import javax.mail.internet.*; 
+import java.util.Properties;  
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import javax.mail.*;  
 
 public class Server extends javax.swing.JFrame {
 
     private static Server server = null;
     private ThreadServer ThreadServer;
-    private JPanel[] tabPanel;
+    final private JPanel[] tabPanel;
     
 
     private Server() {
@@ -484,6 +489,60 @@ public class Server extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     
+    private static void countDown(){
+        final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        final Runnable runnable;
+        runnable = new Runnable() {
+            int countdownStarter = 36000;
+
+            @Override
+            public void run() {
+
+                countdownStarter--;
+
+                if (countdownStarter < 0) {
+                    System.out.println("Timer Over!");
+                    scheduler.shutdown();
+                    //MEP close clients
+                    exit(0);
+                }
+            }
+        };
+        scheduler.scheduleAtFixedRate(runnable, 0, 1, SECONDS);
+    }
+    
+    private static void envoieMail(String from,String pwd,String to,String sub,String msg){
+        //Propriétés
+        Properties p = new Properties();
+        p.put("mail.smtp.host", "smtp.gmail.com");
+        p.put("mail.smtp.socketFactory.port", "465");
+        p.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        p.put("mail.smtp.auth", "true");
+        p.put("mail.smtp.port", "465");
+        //Session
+        Session s;
+        s = Session.getDefaultInstance(p,
+                new javax.mail.Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(from, pwd);
+                    }
+                });
+        //composer le message
+        try {
+            MimeMessage m = new MimeMessage(s);
+            m.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
+            m.setSubject(sub);
+            m.setText(msg);
+            Transport.send(m);
+            System.out.println("Message envoyé avec succès");
+        } catch (MessagingException e) {
+            System.out.println(e);
+        }
+        
+    }
+    
     //<editor-fold defaultstate="collapsed" desc=" Interaction graphique ">
     private void AdminButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AdminButtonActionPerformed
         verifPassword(AdminText.getPassword());
@@ -572,11 +631,11 @@ public class Server extends javax.swing.JFrame {
     
     
     private void hidePanel(String panelName) {
-        for (int i = 0; i < tabPanel.length; i++) {
-            if (tabPanel[i].getName().equals(panelName)) {
-                tabPanel[i].setVisible(true);
+        for (JPanel tabPanel1 : tabPanel) {
+            if (tabPanel1.getName().equals(panelName)) {
+                tabPanel1.setVisible(true);
             } else {
-                tabPanel[i].setVisible(false);
+                tabPanel1.setVisible(false);
             }
         }
     }
@@ -587,51 +646,12 @@ public class Server extends javax.swing.JFrame {
         int key = "123".hashCode();
         if (tmpI == key) {
             hidePanel("ServerPanel");
-            initCommPanel();
+            ServerPort.requestFocus();
         } else {
             String msg = "Wrong Password !";
             JOptionPane.showMessageDialog(this, msg, "ERROR", JOptionPane.ERROR_MESSAGE);
             exit(0);
         }
-    }
-
-    private void initCommPanel() {
-        //init tabUser
-
-        //this.tabEntity = new ArrayList<Entity>();
-        
-        //Affichage btn
-//        for (int i = 0; i < tabUser.length; i++) {
-//            
-//            JButton btn = new JButton(tabUser[i].nom + " " + tabUser[i].prenom);
-//            btn.setName("Btn"+tabUser[i].id);
-//            btn.setSize(50, 50);
-//            btn.addActionListener(new ActionListener() {
-//                public void actionPerformed(ActionEvent e) {
-//                    for(Entity ent : tabEntity){
-//                        if(ent.button.getName().equals(btn.getName())){
-//                            ent.convPanel.setVisible(true);
-//                        }else{
-//                            ent.convPanel.setVisible(false);
-//                        }
-//                    }
-//                }
-//            });
-//            
-//            SidePanel.add(btn).setVisible(true);
-//            CommPanel.updateUI();
-//            
-//            ConvPanel convPanel = new ConvPanel();
-//            convPanel.setName("Panel"+tabUser[i].id);
-//            convPanel.ConvTitre.setText(tabUser[i].prenom + " " + tabUser[i].nom);
-//            CenterPanel.add(convPanel).setVisible(false);
-//            CommPanel.updateUI();
-//            
-//            Entity ent = new Entity(tabUser[i], btn, convPanel);
-//            tabEntity.add(ent);
-//            
-//        }
-
     }
 
     private void launchServer(String input) {
@@ -676,7 +696,7 @@ public class Server extends javax.swing.JFrame {
 
     private static Integer tryParse(String text) {
         try {
-            return Integer.parseInt(text);
+            return Integer.valueOf(text);
         } catch (NumberFormatException e) {
             return 0;
         }
@@ -684,9 +704,6 @@ public class Server extends javax.swing.JFrame {
 
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -694,24 +711,18 @@ public class Server extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Server.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Server.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Server.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Server.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
+
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                server = new Server();
-                server.setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            server = new Server();
+            server.setVisible(true);
+            envoieMail("pfenebular@gmail.com","yujdvtlrnjzihasr","pfenebular@gmail.com","[NEBULAR] Code administrateur","Voici votre mot de passe nebular :");
+            countDown();
         });
     }
 

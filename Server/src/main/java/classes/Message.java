@@ -97,4 +97,8 @@ public class Message {
         System.out.println(this.idExp+ " -> " + this.idConv + " | " + this.date + " | " + this.content);
     }
     
+    public String affichage(){
+        return "FROM : " + this.idExp + " - " + this.content + " - " + this.date;
+    }
+    
 }

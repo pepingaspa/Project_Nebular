@@ -49,8 +49,8 @@ public class User {
         ArrayList<User> tabUser = new ArrayList<User>();
         
         User user1 = new User(1,"A", "A", "a@a.a", "A", "123", 1, false);
-        User user2 = new User(1,"B", "B", "b@b.b", "B", "123", 1, false);
-        User user3 = new User(1,"C", "C", "c@c.c", "C", "123", 1, false);
+        User user2 = new User(2,"B", "B", "b@b.b", "B", "123", 1, false);
+        User user3 = new User(3,"C", "C", "c@c.c", "C", "123", 1, false);
         
         tabUser.add(user1); tabUser.add(user2); tabUser.add(user3);
         
