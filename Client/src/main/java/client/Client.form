@@ -151,6 +151,15 @@
             <Property name="rows" type="int" value="10"/>
           </Layout>
           <SubComponents>
+            <Component class="javax.swing.JLabel" name="SideBarUser">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="cc" type="rgb"/>
+                </Property>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="CONTACTS"/>
+              </Properties>
+            </Component>
             <Component class="javax.swing.JLabel" name="SideBarTitre">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">

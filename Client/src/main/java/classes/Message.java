@@ -12,8 +12,8 @@ import java.util.logging.Logger;
 public class Message {
     
     public int id, idConv, idExp;
-    boolean type, vis;
-    String content, date, ext, name;
+    public boolean type, vis;
+    public String content, date, ext, name;
     
     
     public Message(int tmpid, int tmpConv, int tmpExp, boolean tmpType, String tmpContent, boolean tmpVis, String tmpDate){
@@ -53,12 +53,14 @@ public class Message {
     
     private static void constructFile(String name, String ext, String content) throws FileNotFoundException{
         byte[] fileContent = Base64.getDecoder().decode(content);
-        FileOutputStream fos = new FileOutputStream("/home/cytech/Bureau/" + name + "." + ext);
         try {
+            //ne trouve pas le fichier à créer
+            FileOutputStream fos = new FileOutputStream("/home/cytech/Bureau/" + name + "_REC." + ext);
             fos.write(fileContent);
             fos.flush();
+            fos.close();
         } catch (IOException ex) {
-            Logger.getLogger(Message.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
     
@@ -95,6 +97,10 @@ public class Message {
     
     public void print(){
         System.out.println(this.idExp+ " -> " + this.idConv + " | " + this.date + " | " + this.content);
+    }
+    
+    public String affichage(){
+        return "FROM : " + this.idExp + " - " + this.content + " - " + this.date;
     }
     
 }

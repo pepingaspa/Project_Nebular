@@ -39,7 +39,18 @@ public class NewConvPanel extends javax.swing.JPanel {
 
         NCLDesc.setText("Description");
 
+        NCTDesc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NCTDescActionPerformed(evt);
+            }
+        });
+
         NCButton.setText("Create");
+        NCButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NCButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -51,20 +62,20 @@ public class NewConvPanel extends javax.swing.JPanel {
                         .addGap(374, 374, 374)
                         .addComponent(NCLNom))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(363, 363, 363)
-                        .addComponent(NCTNom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(361, 361, 361)
-                        .addComponent(NCLDesc))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(327, 327, 327)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(NCTDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(NCTitre)))
+                        .addComponent(NCTitre))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(353, 353, 353)
-                        .addComponent(NCButton)))
-                .addContainerGap(331, Short.MAX_VALUE))
+                        .addComponent(NCButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(298, 298, 298)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(NCTDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(NCTNom, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(350, 350, 350)
+                        .addComponent(NCLDesc)))
+                .addContainerGap(322, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -73,17 +84,25 @@ public class NewConvPanel extends javax.swing.JPanel {
                 .addComponent(NCTitre)
                 .addGap(33, 33, 33)
                 .addComponent(NCLNom)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(NCTNom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(72, 72, 72)
                 .addComponent(NCLDesc)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(NCTDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(39, 39, 39)
                 .addComponent(NCButton)
                 .addContainerGap(184, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void NCTDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NCTDescActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_NCTDescActionPerformed
+
+    private void NCButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NCButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_NCButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

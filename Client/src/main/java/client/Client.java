@@ -2,18 +2,15 @@ package client;
 
 import classes.*;
 import java.awt.GridLayout;
-import java.awt.Panel;
 import java.awt.event.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import static java.lang.Integer.max;
-import java.math.BigInteger;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.crypto.SecretKey;
 import javax.swing.*;
 
 public class Client extends javax.swing.JFrame {
@@ -25,9 +22,12 @@ public class Client extends javax.swing.JFrame {
 
     Socket socket;
     User userLog;
-    ArrayList<Conversation> tabConv = new ArrayList<Conversation>();
-    ArrayList<Entity> tabEntity = new ArrayList<Entity>();
-    int n = 1926305761;
+    ArrayList<Conversation> tabConv = new ArrayList<>();
+    static ArrayList<Entity> tabEntity = new ArrayList<>();
+    int n = 25491937;
+    DataInputStream inData;
+    DataOutputStream outData;
+    static SecretKey secretKeyDef;
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -42,6 +42,7 @@ public class Client extends javax.swing.JFrame {
         ArpButton = new javax.swing.JButton();
         CommPanel = new javax.swing.JPanel();
         SideBar = new javax.swing.JPanel();
+        SideBarUser = new javax.swing.JLabel();
         SideBarTitre = new javax.swing.JLabel();
         NewConvBtn = new javax.swing.JButton();
         CenterPanel = new javax.swing.JPanel();
@@ -122,6 +123,11 @@ public class Client extends javax.swing.JFrame {
         SideBar.setBackground(new java.awt.Color(204, 204, 204));
         SideBar.setPreferredSize(new java.awt.Dimension(150, 536));
         SideBar.setLayout(new java.awt.GridLayout(10, 0));
+
+        SideBarUser.setBackground(new java.awt.Color(204, 255, 255));
+        SideBarUser.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        SideBarUser.setText("CONTACTS");
+        SideBar.add(SideBarUser);
 
         SideBarTitre.setBackground(new java.awt.Color(204, 255, 255));
         SideBarTitre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -212,7 +218,7 @@ public class Client extends javax.swing.JFrame {
             System.out.println("Var creation");
             DataInputStream inData = new DataInputStream(socket.getInputStream());
             DataOutputStream outData = new DataOutputStream(socket.getOutputStream());
-            String input = "", send = "", tmp = "";
+            String input, send, tmp;
             String[] split;
             
             
@@ -220,64 +226,56 @@ public class Client extends javax.swing.JFrame {
             //SAISIE
             System.out.println("Saisie");
             send = LoginText.getText() + ";_;" + String.valueOf(LoginMdp.getPassword()).hashCode();
-            outData.writeUTF(send);
-            outData.flush();
+            write(send);
             
             
             //USER
             System.out.println("User");
-            input = inData.readUTF();
-            //decryptage input
+            input = Cryptage.decrypt(inData.readUTF(), secretKeyDef);
             split = input.split(";_;");
-            userLog = User.deconcat(split[1]);
-            tmp = (Integer.parseInt(split[0])+1) + "";
-            //cryptage tmp
-            outData.writeUTF(tmp);
-            outData.flush();
+            System.out.println(Arrays.toString(split));
+            if(split[1].equals("false")){
+                //traitement mauvais login
+            }else{
+                userLog = User.deconcat(split[1]);
+                tmp = (Integer.parseInt(split[0])+1) + "";
+                write(tmp);
+                SideBarUser.setText(userLog.nom + " " + userLog.prenom);
+                //CONV
+                System.out.println("Conv");
+
+                input = Cryptage.decrypt(inData.readUTF(), secretKeyDef);
+                System.out.println(input);
+                split = input.split(";_;");
+                tabConv = Conversation.deconcatTab(split[1]);
+                tmp = (Integer.parseInt(split[0])+1) + "";
+                write(tmp);
+
+
+                //TABUSERS
+                System.out.println("Tab");
+
+
+                //MESSAGE
+                System.out.println("Msg");
+
+
+                //Final Treatment
+                System.out.println("Final Treatment");
+
+
+
+                ThreadListening listening = new ThreadListening(socket);
+                listening.start();
+
+                createConv();
+
+                LoginPanel.setVisible(false);
+                CommPanel.setVisible(true); 
+            }
             
-            
-            //CONV
-            System.out.println("Conv");
-            
-            input = inData.readUTF();
-            //decryptage input
-            System.out.println(input);
-            split = input.split(";_;");
-            tabConv = Conversation.deconcatTab(split[1]);
-            //cryptage send
-            tmp = (Integer.parseInt(split[0])+1) + "";
-            //cryptage tmp
-            outData.writeUTF(tmp);
-            outData.flush();
-            
-            
-            //TABUSERS
-            System.out.println("Tab");
-            
-            
-            //MESSAGE
-            System.out.println("Msg");
-            
-            
-            //Final Treatment
-            System.out.println("Final Treatment");
-            
-            
-            
-            ThreadListening listening = new ThreadListening(socket);
-            listening.start();
-            
-            createConv();
-            
-            LoginPanel.setVisible(false);
-            CommPanel.setVisible(true); 
-            
-            
-            
-        } catch (IOException ex) {
-            System.out.println("Cannot create threadlistening");
-        } catch (Exception ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }//GEN-LAST:event_LoginBtnActionPerformed
 
@@ -300,7 +298,7 @@ public class Client extends javax.swing.JFrame {
         backGround.setName("BackGround");
         
         CenterPanel.add(backGround);
-        ArrayList<ConvPanel> tabPanel = new ArrayList<ConvPanel>();
+        ArrayList<ConvPanel> tabPanel = new ArrayList<>();
         
         NewConvPanel newConvPanel = new NewConvPanel();
         newConvPanel.setVisible(false);
@@ -322,18 +320,14 @@ public class Client extends javax.swing.JFrame {
             tabEntity.add(ent);
             JButton btn = new JButton(conv.nom);
             btn.setSize(81,18);
-            btn.addActionListener( new ActionListener() {
-                @Override
-                public void actionPerformed( ActionEvent e ) {
-                    showPanel(tabPanel, conv.nom);
-                    backGround.setVisible(false);
-                    newConvPanel.setVisible(false);
-                }
+            btn.addActionListener((ActionEvent e) -> {
+                showPanel(tabPanel, conv.nom);
+                backGround.setVisible(false);
+                newConvPanel.setVisible(false);
             });
             SideBar.add(btn);
         }
     }
-    
     
     public void showPanel(ArrayList<ConvPanel> tabPanel, String panelName){
         for (int i = 0; i < tabPanel.size(); i++) {
@@ -359,91 +353,108 @@ public class Client extends javax.swing.JFrame {
             System.out.println("Connextion achieve");
             //Variable
             System.out.println("Var creation");
-            DataInputStream inData = new DataInputStream(socket.getInputStream());
-            DataOutputStream outData = new DataOutputStream(socket.getOutputStream());
-            String input = "", send = "", tmp = "";
+            inData = new DataInputStream(socket.getInputStream());
+            outData = new DataOutputStream(socket.getOutputStream());
+            String input, send, tmp;
             String[] split;
             
             //init clé
+            //recup mac + ip 
+            String pass = "777005";
+            SecretKey secretKeyTmp = Cryptage.generateKeyTemp(pass);
             
-            
-            
-            //Echange Clé
             System.out.println("Echange clés");
             input = inData.readUTF();
+            input = Cryptage.decrypt(input, secretKeyTmp);
             split = input.split(";_;");
             tmp = (Integer.parseInt(split[0])+1) + "";
-            outData.writeUTF(tmp);
-            outData.flush();
+            secretKeyDef = Cryptage.generateKeyDef(split[1]);
+            write(tmp);
+            
             
             //Authentification
             System.out.println("Authentification");
             
-            send = "";
-            
-            int r = (int) (Math.random()*(n-1)+1);
+            int alan = 100;
+            long r = (long) (Math.random()*(n-2)+1);
             long x = (r * r) % n;
             send = x + "";
-            long[] tabV = new long[100];
-            long[] tabV2 = new long[100];
-            long[] tabZ = new long[100];
+            long[] tabV = new long[alan];
+            long[] tabV2 = new long[alan];
+            long[] tabZ = new long[alan];
             
-            for(int i = 0; i<100; i++){
-                tabV[i] = (int) (Math.random()*(n-1)+1);
+            for(int i = 0; i<alan; i++){
+                tabV[i] = (int) (Math.random()*(n-2)+1);
                 tabV2[i] = (tabV[i] * tabV[i]) % n;
                 send = send + ";" + tabV2[i];
             }
             
-            outData.writeUTF(send);
-            outData.flush();
+            write(send);
             
-            input = inData.readUTF();
+            input = Cryptage.decrypt(inData.readUTF(), secretKeyDef);   
             split = input.split(";");
             
-            for(int i = 0; i<100; i++){
+            for(int i = 0; i<alan; i++){
                 if("0".equals(split[i])){
-                    tabZ[i] = tabV2[i];
+                    tabZ[i] = tabV[i];
                 }
                 if("1".equals(split[i])){
-                    tabZ[i] = (r * tabV2[i]) % n;
+                    tabZ[i] = (r * tabV[i]) % n;
                 }
             }
             
             send = tabZ[0] + "";
-            for(int i = 1; i<100; i++){
+            for(int i = 1; i<alan; i++){
                 send += ";" + tabZ[i];
             }
             
-            outData.writeUTF(send);
-            outData.flush();
+            write(send);
             
             
-            ArpPanel.setVisible(false);
-            LoginPanel.setVisible(true);
-        } catch (IOException ex) {
-            System.out.println("Can not connet to the server !");
+            input = Cryptage.decrypt(inData.readUTF(), secretKeyDef);
+            if(input.equals("true")){
+                ArpPanel.setVisible(false);
+                LoginPanel.setVisible(true);
+                
+            }else{
+                JOptionPane.showMessageDialog(ArpPanel, "Authentication failed.");
+            }
+            
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         
     }
     
+    private void write(String send){
+        send = Cryptage.encrypt(send, secretKeyDef);
+        try{
+            outData.writeUTF(send);
+            outData.flush();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
     
+    
+    public static SecretKey getKeyDef(){
+        return secretKeyDef;
+    }
+        
     public static Integer tryParse(String text) {
         try {
-            return Integer.parseInt(text);
+            return Integer.valueOf(text);
         } catch (NumberFormatException e) {
             return 0;
         }
     }
     
-    /**
-     * @param args the command line arguments
-     */
+    public static ArrayList<Entity> getTabEntity(){
+        return tabEntity;
+    }
+    
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -462,11 +473,8 @@ public class Client extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Client().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Client().setVisible(true);
         });
     }
 
@@ -487,6 +495,7 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JButton NewConvBtn;
     private javax.swing.JPanel SideBar;
     private javax.swing.JLabel SideBarTitre;
+    private javax.swing.JLabel SideBarUser;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }
