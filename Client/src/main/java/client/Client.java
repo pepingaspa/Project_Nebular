@@ -11,7 +11,10 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.crypto.SecretKey;
-import javax.swing.*;
+import javax.swing.*;import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 public class Client extends javax.swing.JFrame {
 
@@ -358,9 +361,26 @@ public class Client extends javax.swing.JFrame {
             String input, send, tmp;
             String[] split;
             
-            //init clé
             //recup mac + ip 
-            String pass = "777005";
+            InetAddress ip;
+            StringBuilder sb = new StringBuilder();
+            try {
+                ip = InetAddress.getLocalHost();
+                NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+                byte[] mac = network.getHardwareAddress();
+                for (int i = 0; i < mac.length; i++) {
+                    sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+                }
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            } catch (SocketException e){
+                e.printStackTrace();
+            }
+
+            String mac = sb.toString(); //On note que s'il y a un problème dans l'obtention de la MAC, la gen de tempKey est vouée à l'échec
+            //init clé
+            Encode e = new Encode();
+            String pass = String.valueOf(e.tempKey(mac));
             SecretKey secretKeyTmp = Cryptage.generateKeyTemp(pass);
             
             System.out.println("Echange clés");
@@ -376,7 +396,7 @@ public class Client extends javax.swing.JFrame {
             System.out.println("Authentification");
             
             int alan = 100;
-            long r = (long) (Math.random()*(n-2)+1);
+            long r = e.genR(mac);
             long x = (r * r) % n;
             send = x + "";
             long[] tabV = new long[alan];
