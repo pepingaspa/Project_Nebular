@@ -1,5 +1,6 @@
 package server;
 
+import classes.User;
 import java.io.IOException;
 import static java.lang.System.exit;
 import javax.swing.JOptionPane;
@@ -504,6 +505,7 @@ public class Server extends javax.swing.JFrame {
                 if (countdownStarter < 0) {
                     System.out.println("Timer Over!");
                     scheduler.shutdown();
+                    BddObject.getInstance().close();
                     //MEP close clients
                     exit(0);
                 }
@@ -717,11 +719,11 @@ public class Server extends javax.swing.JFrame {
         //</editor-fold>
 
 
-        /* Create and display the form */
+        
         java.awt.EventQueue.invokeLater(() -> {
             server = new Server();
             server.setVisible(true);
-            envoieMail("pfenebular@gmail.com","yujdvtlrnjzihasr","pfenebular@gmail.com","[NEBULAR] Code administrateur","Voici votre mot de passe nebular :");
+            //envoieMail("pfenebular@gmail.com","yujdvtlrnjzihasr","pfenebular@gmail.com","[NEBULAR] Code administrateur","Voici votre mot de passe nebular :");
             countDown();
         });
     }

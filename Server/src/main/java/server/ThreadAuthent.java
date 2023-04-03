@@ -39,6 +39,8 @@ public class ThreadAuthent extends Thread{
             User userLog = new User();
             int min = 1, max = 500000, alea;
 
+
+            String mac = new String();
             //init clé
             Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
             while (networkInterfaces.hasMoreElements()) {
@@ -49,15 +51,14 @@ public class ThreadAuthent extends Thread{
                     for (int i = 0; i < hardwareAddress.length; i++) {
                         hexadecimalFormat[i] = String.format("%02X", hardwareAddress[i]);
                     }
-                    System.out.println(String.join("-", hexadecimalFormat));
+                    mac = String.join("-", hexadecimalFormat);
                 }
             }
             
+            Encode e = new Encode();
+            String passtmp = String.valueOf(e.tempKey(mac));
             
-            
-            
-            
-            SecretKey secretKeyTmp = Cryptage.generateKeyTemp("777005");
+            SecretKey secretKeyTmp = Cryptage.generateKeyTemp(passtmp);
             String pass = Cryptage.randomPass();
             keyDef = Cryptage.generateKeyDef(pass);
 

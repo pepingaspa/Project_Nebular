@@ -12,8 +12,8 @@ import java.util.logging.Logger;
 public class Message {
     
     public int id, idConv, idExp;
-    boolean type, vis;
-    String content, date, ext, name;
+    public boolean type, vis;
+    public String content, date, ext, name;
     
     
     public Message(int tmpid, int tmpConv, int tmpExp, boolean tmpType, String tmpContent, boolean tmpVis, String tmpDate){
