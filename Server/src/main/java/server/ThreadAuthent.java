@@ -5,9 +5,13 @@ import classes.Cryptage;
 import classes.User;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.net.NetworkInterface;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import javax.crypto.SecretKey;
 import static server.ThreadServer.tabConv;
@@ -39,8 +43,12 @@ public class ThreadAuthent extends Thread{
             User userLog = new User();
             int min = 1, max = 500000, alea;
 
-
+            System.out.println(socket.getInetAddress());
+            System.out.println(socket.getRemoteSocketAddress());
+            
+            
             String mac = new String();
+            ArrayList<String> listMac = new ArrayList();
             //init clé
             Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
             while (networkInterfaces.hasMoreElements()) {
@@ -52,9 +60,10 @@ public class ThreadAuthent extends Thread{
                         hexadecimalFormat[i] = String.format("%02X", hardwareAddress[i]);
                     }
                     mac = String.join("-", hexadecimalFormat);
+                    System.out.println("MAC  : "+mac);
+                    listMac.add(mac);
                 }
             }
-            
             Encode e = new Encode();
             String passtmp = String.valueOf(e.tempKey(mac));
             
