@@ -7,6 +7,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import static java.lang.Integer.max;
+import static java.lang.System.in;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +16,7 @@ import javax.swing.*;import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 public class Client extends javax.swing.JFrame {
 
@@ -360,19 +362,30 @@ public class Client extends javax.swing.JFrame {
             outData = new DataOutputStream(socket.getOutputStream());
             String input, send, tmp;
             String[] split;
-            
-            //recup mac + ip 
-            InetAddress ip;
             StringBuilder sb = new StringBuilder();
             try {
-                ip = InetAddress.getLocalHost();
-                NetworkInterface network = NetworkInterface.getByInetAddress(ip);
-                byte[] mac = network.getHardwareAddress();
-                for (int i = 0; i < mac.length; i++) {
-                    sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+                Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+                while(networkInterfaces.hasMoreElements())
+                {
+                    NetworkInterface network = networkInterfaces.nextElement();
+                    System.out.println("network : " + network);
+                    byte[] mac = network.getHardwareAddress();
+                    if(mac == null)
+                    {
+                        System.out.println("null mac");             
+                    }
+                    else
+                    {
+                        System.out.print("MAC address : ");
+                        
+                        for (int i = 0; i < mac.length; i++)
+                        {
+                            sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));        
+                        }
+                        System.out.println(sb.toString());  
+                        break;
+                    }
                 }
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
             } catch (SocketException e){
                 e.printStackTrace();
             }
