@@ -17,6 +17,8 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Client extends javax.swing.JFrame {
 
@@ -279,8 +281,8 @@ public class Client extends javax.swing.JFrame {
                 CommPanel.setVisible(true); 
             }
             
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_LoginBtnActionPerformed
 
@@ -362,6 +364,7 @@ public class Client extends javax.swing.JFrame {
             outData = new DataOutputStream(socket.getOutputStream());
             String input, send, tmp;
             String[] split;
+            
             StringBuilder sb = new StringBuilder();
             try {
                 Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
@@ -382,19 +385,37 @@ public class Client extends javax.swing.JFrame {
                         {
                             sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));        
                         }
-                        System.out.println(sb.toString());  
                         break;
                     }
                 }
-            } catch (SocketException e){
-                e.printStackTrace();
+            } catch (SocketException ex){
+                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             String mac = sb.toString(); //On note que s'il y a un problème dans l'obtention de la MAC, la gen de tempKey est vouée à l'échec
+            System.out.println(mac);
             //init clé
             Encode e = new Encode();
+            
+            SecretKey keyIp = Cryptage.generateKeyTemp("tmp",socket.getInetAddress().toString());
+            
             String pass = String.valueOf(e.tempKey(mac));
             SecretKey secretKeyTmp = Cryptage.generateKeyTemp(pass);
+            
+            int alan = 100;
+            long r = e.genR(mac);
+            long x = (r * r) % n;
+            send = x + "";
+            System.out.println(x);
+            
+            send = Cryptage.encrypt(send, keyIp);
+            
+            outData.writeUTF(send);
+            outData.flush();
+            
+            
+            String resp = inData.readUTF();
+            System.out.println(resp);
             
             System.out.println("Echange clés");
             input = inData.readUTF();
@@ -408,14 +429,11 @@ public class Client extends javax.swing.JFrame {
             //Authentification
             System.out.println("Authentification");
             
-            int alan = 100;
-            long r = e.genR(mac);
-            long x = (r * r) % n;
-            send = x + "";
+            
             long[] tabV = new long[alan];
             long[] tabV2 = new long[alan];
             long[] tabZ = new long[alan];
-            
+            send = x+"";
             for(int i = 0; i<alan; i++){
                 tabV[i] = (int) (Math.random()*(n-2)+1);
                 tabV2[i] = (tabV[i] * tabV[i]) % n;
@@ -453,8 +471,8 @@ public class Client extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(ArpPanel, "Authentication failed.");
             }
             
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
@@ -464,8 +482,8 @@ public class Client extends javax.swing.JFrame {
         try{
             outData.writeUTF(send);
             outData.flush();
-        }catch(IOException e){
-            e.printStackTrace();
+        }catch(IOException ex){
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
