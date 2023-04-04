@@ -415,7 +415,14 @@ public class Client extends javax.swing.JFrame {
             
             
             String resp = inData.readUTF();
-            System.out.println(resp);
+            if(resp == "07856"){
+                System.out.println(resp);
+            
+                String macSend = "";
+
+                outData.writeUTF(mac);
+                outData.flush();
+            }
             
             System.out.println("Echange clés");
             input = inData.readUTF();
