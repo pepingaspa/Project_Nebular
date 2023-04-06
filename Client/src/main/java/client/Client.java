@@ -365,34 +365,36 @@ public class Client extends javax.swing.JFrame {
             String input, send, tmp;
             String[] split;
             
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb;
+            String mac = "";
             try {
                 Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
                 while(networkInterfaces.hasMoreElements())
                 {
                     NetworkInterface network = networkInterfaces.nextElement();
-                    System.out.println("network : " + network);
-                    byte[] mac = network.getHardwareAddress();
-                    if(mac == null)
-                    {
-                        System.out.println("null mac");             
-                    }
-                    else
-                    {
-                        System.out.print("MAC address : ");
-                        
-                        for (int i = 0; i < mac.length; i++)
+                    byte[] macTab = network.getHardwareAddress();                    
+                    if("wlo1".equals(network.getName())){
+                        System.out.println("network "+ network.getName());
+                        if(macTab == null)
                         {
-                            sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));        
+                            System.out.println("null mac");
                         }
-                        break;
+                        else
+                        {
+                            System.out.print("MAC address : ");
+                            sb = new StringBuilder();
+                            for (int i = 0; i < macTab.length; i++)
+                            {
+                                sb.append(String.format("%02X%s", macTab[i], (i < macTab.length - 1) ? "-" : ""));        
+                            }
+                            mac = sb.toString();
+                        }
                     }
                 }
             } catch (SocketException ex){
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-            String mac = sb.toString(); //On note que s'il y a un problème dans l'obtention de la MAC, la gen de tempKey est vouée à l'échec
+            
             System.out.println(mac);
             //init clé
             Encode e = new Encode();

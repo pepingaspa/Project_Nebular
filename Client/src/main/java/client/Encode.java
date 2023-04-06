@@ -5,8 +5,6 @@ public class Encode {
 
     private double genNewMac(String mac) {
         Encode e = new Encode();
-        long actuel = e.millis;
-        actuel = actuel%(24*60*1000*60);
         double newmac = 0;
         int compt = 0;
         for(int i=0; i<17 ; i++) {
