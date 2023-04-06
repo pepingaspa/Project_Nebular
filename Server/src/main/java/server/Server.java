@@ -495,7 +495,8 @@ public class Server extends javax.swing.JFrame {
 
         final Runnable runnable;
         runnable = new Runnable() {
-            int countdownStarter = 36000;
+            //compte à rebour de 12h
+            int countdownStarter = 43200;
 
             @Override
             public void run() {

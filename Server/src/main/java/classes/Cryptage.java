@@ -1,5 +1,6 @@
 package classes;
 
+import java.math.BigInteger;
 import java.util.Base64;
 import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
@@ -14,6 +15,34 @@ public class Cryptage {
         
         char[] pass = passTmp.toCharArray();
         
+        try{
+            PBEKeySpec pbeKeySpec = new PBEKeySpec(pass, salt, 5000,256);
+            SecretKey secretKey = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256").generateSecret(pbeKeySpec);
+            return new SecretKeySpec(secretKey.getEncoded(), "AES");
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static SecretKey generateKeyTemp(String passTmp, String ip) {
+        char[] pass;
+        int preSalt = 0;
+        byte[] salt;
+        String numberz = "0123456789";
+        int count = 0;
+
+        for(int i=0;i<ip.length();i++) {
+            if(numberz.indexOf(ip.charAt(i)) != -1) {
+                preSalt += ip.charAt(i)*Math.pow(10,count);
+                count++;
+            }
+        }
+        
+        salt = (BigInteger.valueOf(preSalt%1000)).toByteArray();
+        pass = (""+(preSalt%1000)).toCharArray();
+
         try{
             PBEKeySpec pbeKeySpec = new PBEKeySpec(pass, salt, 5000,256);
             SecretKey secretKey = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256").generateSecret(pbeKeySpec);

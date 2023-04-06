@@ -159,12 +159,13 @@ public final class BddObject {
     
     public ArrayList<User> selectAllUser(){
         try {
+            ArrayList<User> listUser = new ArrayList();
             stat = conn.createStatement();
             res = stat.executeQuery("SELECT * FROM Users;");
             while(res.next()){
                 System.out.println(res.getString("pseudo"));
             }
-            return null;
+            return listUser;
         } catch (SQLException ex) {
             Logger.getLogger(BddObject.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -209,16 +210,37 @@ public final class BddObject {
             stat = conn.createStatement();
             res = stat.executeQuery("SELECT * FROM Conversations;");
             while(res.next()){
-                String listUser = res.getString("listUser");
-                //Conversation conv = new Conversation();
+                String[] split = res.getString("listUser").split(";");
+                ArrayList<Integer> list = new ArrayList();
+                for(int i=0; i<split.length; i++){
+                    list.add(Integer.valueOf(split[i]));
+                }
+                Conversation conv = new Conversation(res.getInt("id"), res.getString("name"), res.getString("desc"), list);
+                listConv.add(conv);
             }
+            return listConv;
         } catch (SQLException ex){
             Logger.getLogger(BddObject.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
     
-    public Conversation selectConversation(){
+    public Conversation selectConversation(int idConv){
+        try{
+            Conversation conv;
+            stat = conn.createStatement();
+            res = stat.executeQuery("SELECT * FROM Conversations WHERE id = "+idConv+";");
+            if(res.next()){
+                String[] split = res.getString("listUser").split(";");
+                ArrayList<Integer> list = new ArrayList();
+                for(int i=0; i<split.length; i++){
+                    list.add(Integer.valueOf(split[i]));
+                }
+                return new Conversation(res.getInt("id"), res.getString("name"), res.getString("desc"), list);
+            }
+        } catch(SQLException ex) {
+            Logger.getLogger(BddObject.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return null;
     }
     
@@ -235,7 +257,7 @@ public final class BddObject {
         return true;
     }
     
-    public boolean updateUser(){
+    public boolean updateUser(User user){
         return true;
     }
     
